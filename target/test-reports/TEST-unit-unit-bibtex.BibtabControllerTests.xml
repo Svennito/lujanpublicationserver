@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="0" failures="5" hostname="texture" name="bibtex.BibtabControllerTests" tests="8" time="9.512" timestamp="2012-07-09T17:30:22">
+  <properties />
+  <testcase classname="bibtex.BibtabControllerTests" name="testIndex" time="3.699" />
+  <testcase classname="bibtex.BibtabControllerTests" name="testList" time="2.533" />
+  <testcase classname="bibtex.BibtabControllerTests" name="testCreate" time="0.312" />
+  <testcase classname="bibtex.BibtabControllerTests" name="testSave" time="0.868">
+    <failure message="Assertion failed: &#xa;&#xa;assert response.redirectedUrl == &apos;/bibtab/show/1&apos;&#xa;       |        |             |&#xa;       |        null          false&#xa;       org.codehaus.groovy.grails.plugins.testing.GrailsMockHttpServletResponse@42a64b51&#xa;" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: Assertion failed: 
+
+assert response.redirectedUrl == &apos;/bibtab/show/1&apos;
+       |        |             |
+       |        null          false
+       org.codehaus.groovy.grails.plugins.testing.GrailsMockHttpServletResponse@42a64b51
+
+	at bibtex.BibtabControllerTests.testSave(BibtabControllerTests.groovy:49)
+</failure>
+  </testcase>
+  <testcase classname="bibtex.BibtabControllerTests" name="testShow" time="0.78">
+    <failure message="Assertion failed: &#xa;&#xa;assert bibtab.save() != null&#xa;       |      |      |&#xa;       null   null   false&#xa;" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: Assertion failed: 
+
+assert bibtab.save() != null
+       |      |      |
+       null   null   false
+
+	at bibtex.BibtabControllerTests.testShow(BibtabControllerTests.groovy:64)
+</failure>
+  </testcase>
+  <testcase classname="bibtex.BibtabControllerTests" name="testEdit" time="0.319">
+    <failure message="Assertion failed: &#xa;&#xa;assert bibtab.save() != null&#xa;       |      |      |&#xa;       null   null   false&#xa;" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: Assertion failed: 
+
+assert bibtab.save() != null
+       |      |      |
+       null   null   false
+
+	at bibtex.BibtabControllerTests.testEdit(BibtabControllerTests.groovy:83)
+</failure>
+  </testcase>
+  <testcase classname="bibtex.BibtabControllerTests" name="testUpdate" time="0.39">
+    <failure message="Assertion failed: &#xa;&#xa;assert bibtab.save() != null&#xa;       |      |      |&#xa;       null   null   false&#xa;" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: Assertion failed: 
+
+assert bibtab.save() != null
+       |      |      |
+       null   null   false
+
+	at bibtex.BibtabControllerTests.testUpdate(BibtabControllerTests.groovy:104)
+</failure>
+  </testcase>
+  <testcase classname="bibtex.BibtabControllerTests" name="testDelete" time="0.429">
+    <failure message="Assertion failed: &#xa;&#xa;assert bibtab.save() != null&#xa;       |      |      |&#xa;       null   null   false&#xa;" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: Assertion failed: 
+
+assert bibtab.save() != null
+       |      |      |
+       null   null   false
+
+	at bibtex.BibtabControllerTests.testDelete(BibtabControllerTests.groovy:148)
+</failure>
+  </testcase>
+  <system-out><![CDATA[--Output from testIndex--
+--Output from testList--
+--Output from testCreate--
+--Output from testSave--
+--Output from testShow--
+--Output from testEdit--
+--Output from testUpdate--
+--Output from testDelete--
+]]></system-out>
+  <system-err><![CDATA[--Output from testIndex--
+--Output from testList--
+--Output from testCreate--
+--Output from testSave--
+--Output from testShow--
+--Output from testEdit--
+--Output from testUpdate--
+--Output from testDelete--
+]]></system-err>
+</testsuite>
