@@ -1,0 +1,296 @@
+#! /bin/sh -
+### modified by Sven Vogel (sven@lanl.gov) for use of reference managment at Lujan
+### modifications should be indicated by SV YYMMDD comments, start and end markers if multiple lines
+###
+###
+###
+### ====================================================================
+### Convert a conventionally-formatted (via bibclean) BibTeX file stream
+### to input for an SQL database system, typically via a direct Unix
+### pipeline.  The companion bibsql program can later be used to search
+### the database.
+###
+### Usage:
+### 	bibtosql [ --author ]
+###		 [ --create ]
+###	         [ --database dbname ]
+###		 [ --help ]
+###		 [ --server ( MySQL | psql | PostgreSQL | SQLite ) ]
+###		 [ --version ]
+###		 [ -- ]
+###		 [ BibTeX-file(s) ] > db-input
+###
+### Options may begin with either one or two hyphens, and may be
+### abbreviated to any unique prefix.
+###
+###	--author	Display author information on stdout and
+###			terminate immediately with a success return
+###			code.
+###
+###	--create	Output leading SQL commands to delete any
+###			existing data, and create a new BibTeX table
+###			for key/value searching.  Without this option,
+###			output consists only of commands for adding
+###			new records to an existing database.
+###
+###	--database name	Define the name of the BibTeX database and
+###			table.  The default name is bibtex.
+###
+###	--help		Display brief help information on stdout, and
+###			terminate immediately with a success return
+###			code.
+###
+###	--server name	Define the name of the SQL database server
+###			type for which the output is destined.  The
+###			server names may be abbreviated to any
+###			unique prefix, and lettercase is ignored.  The
+###			names may be MySQL, psql (or PostgreSQL), or
+###			SQLite.  The default is SQLite, the simplest
+###			of the supported database systems.
+###
+###	--version	Display version and copyright information
+###			on stdout and terminate immediately with a
+###			success return code.
+###
+### 	--		All remaining arguments are BibTeX files.
+###
+### To simplify input parsing, the input BibTeX files are expected to
+### be in a standardized form, as produced, for example, by the
+### bibclean utility.
+###
+### Examples:
+###
+###	bibtosql --create *.bib                       | sqlite3 bibtex.db
+###	bibtosql --create --server sqlite *.bib       | sqlite3 bibtex.db
+###	bibtosql --create --server psql *.bib         | psql ...
+###	bibtosql --create --server mysql *.bib        | mysql ...
+###
+###	bibtosql -c *.bib                             | sqlite3 bibtex.db
+###	bibtosql -c -s p *.bib                        | psql ...
+###	bibtosql -c -s m *.bib                        | mysql ...
+###
+###	bibtosql newstuff.bib                         | sqlite3 bibtex.db
+###
+### 	bibclean *.bib | biborder | bibtosql --create | sqlite3 bibtex.db
+###
+### [27-Oct-2008]
+### ====================================================================
+
+IFS='
+ 	'
+
+prefix=/usr/local
+PATH=$prefix/bin:/usr/bin:/bin
+export PATH
+
+# SV120707
+AWKFILE=bibtosql_sv.awk
+GAWK=/usr/bin/gawk
+PROGRAM=$0
+DATE=24-Mar-2010
+VERSION=0.01
+
+## The library directory is always relative to the binary directory,
+## unless it cannot be found, in which case it is the binary
+## directory.
+
+#SV120708 Simplify paths to simply deployment
+#LIBDIR=`dirname $0`/../share/lib/bibsql/bibsql-$VERSION
+#AWKFILEPATH=$LIBDIR/$AWKFILEPATH
+AWKFILEPATH=~/bin/$AWKFILE
+
+
+#SV120708 Modifed assignment to reflect possible change in awk filename
+#test -f $AWKFILEPATH || AWKFILEPATH=./bibtosql.awk
+test -f $AWKFILEPATH || AWKFILEPATH=./$AWKFILE
+#SV120708 Modified error message to reflect the filename
+#test ! -f $AWKFILEPATH && echo ERROR: cannot find bibtosql.awk && exit 1
+test ! -f $AWKFILEPATH && echo ERROR: cannot find $AWKFILEPATH  && exit 1
+
+## Initialize option defaults
+
+CREATEDB=0
+DATABASE=bibtex
+#SV 120707	SERVER=SQLite
+SERVER=MySQL
+
+author()
+{
+cat <<EOF
+
+Author:
+	Nelson H. F. Beebe
+	University of Utah
+	Department of Mathematics, 110 LCB
+	155 S 1400 E RM 233
+	Salt Lake City, UT 84112-0090
+	USA
+	Email: beebe@math.utah.edu, beebe@acm.org, beebe@computer.org (Internet)
+	WWW URL: http://www.math.utah.edu/~beebe
+	Telephone: +1 801 581 5254
+	FAX: +1 801 581 4148
+
+The master archive of this software is found at these equivalent
+locations:
+
+	 ftp://ftp.math.utah.edu/pub/tex/bibtosql
+	http://www.math.utah.edu/pub/tex/bibtosql
+
+Bugs, comments, and kudos may be reported to the author at any of the
+above addresses, but preferably, to this address:
+
+	bug-bibtosql@math.utah.edu
+
+Please include the version number of the software in the subject line in
+correspondence with those addresses, for example,
+
+	Subject: [bibtosql-0.01] bibtosql cannot find awk program
+
+EOF
+}
+
+help()
+{
+cat <<EOF
+
+Usage: $PROGRAM
+		[ --author ]
+		[ --create ]
+		[ --database dbname ]
+		[ --help ]
+		[ --version ]
+		[ --server ( MySQL | psql | PostgreSQL | SQLite ) ]
+		[ -- ]
+		BibTeXfiles or <infile
+		>outfile
+
+Options may begin with either one or two dashes, and lettercase in
+options and database names is ignored.
+
+Examples:
+	bibtosql --create *.bib                       | sqlite3 bibtex.db
+	bibtosql --create --server sqlite *.bib       | sqlite3 bibtex.db
+	bibtosql --create --server psql *.bib         | psql ...
+	bibtosql --create --server mysql *.bib        | mysql ...
+
+	bibtosql -c *.bib                             | sqlite3 bibtex.db
+	bibtosql -c -s p *.bib                        | psql ...
+	bibtosql -c -s m *.bib                        | mysql ...
+
+	bibtosql newstuff.bib                         | sqlite3 bibtex.db
+
+	bibclean *.bib | biborder | bibtosql --create | sqlite3 bibtex.db
+
+EOF
+}
+
+usage()
+{
+    echo ERROR: unrecognized option $1
+    help
+    exit 1
+}
+
+version()
+{
+cat <<EOF
+This is `basename $PROGRAM` version $VERSION of $DATE
+
+Copyright (C) 2009 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+EOF
+}
+
+## Process command-line options
+
+while [ $# -gt -0 ]
+do
+	## NB: must use printf instead of echo here to prevent
+	## interpretation of options as arguments to echo
+
+	opt=`printf "%s" $1 | tr A-Z a-z`
+	case $opt in
+	--a | --au | --aut | --auth | --autho | --author | \
+	-a | -au | -aut | -auth | -autho | -author )
+		author
+		exit 0
+		;;
+
+	--c | --cr | --cre | --crea | --creat | --create | \
+	-c | -cr | -cre | -crea | -creat | -create )
+		CREATEDB=1
+		shift
+		;;
+
+	--d | --da | --dat | --data | --datab | --databa | --databas | --database | \
+	-d | -da | -dat | -data | -datab | -databa | -databas | -database )
+		shift
+		DATABASE=$1
+		shift
+		;;
+
+	--h | --he | --hel | --help | \
+	-h | -he | -hel | -help | \
+	-\? )
+		help
+		exit 0
+		;;
+
+	--s | --se | --ser | --serv | --serve | --server | \
+	-s | -se | -ser | -serv | -serve | -server )
+		shift
+		server=`printf "%s" $1 | tr A-Z a-z`
+		case $server in
+
+		m | my | mys | mysq | mysql )
+			SERVER=MySQL
+			;;
+
+		p | po | pos | post | postg | postgr | postgre | postgres | postgresq | postgresql )
+			SERVER=PostgreSQL
+			;;
+
+		p | ps | psq | psql )
+			SERVER=PostgreSQL
+			;;
+
+		s | sq | sql | sqli | sqlit | sqlite )
+			SERVER=SQLite
+			;;
+
+		*)
+			usage "$server"
+			;;
+
+		esac
+		shift
+		;;
+
+	--v | --ve | --ver | --vers | --versi | --versio | --version | \
+	-v | -ve | -ver | -vers | -versi | -versio | -version )
+		version
+		exit 0
+		;;
+
+	--)	# remaining options are filenames
+		shift
+		break
+		;;
+
+	-)	# remaining options are filenames
+		shift
+		break
+		;;
+
+	-*)	# unknown option
+		usage "$opt"
+		;;
+
+	*)
+		break
+	esac
+done
+
+$GAWK -f $AWKFILEPATH -v CREATEDB=$CREATEDB -v SERVER=$SERVER -v DATABASE=$DATABASE -- "$@"
