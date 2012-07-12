@@ -85,7 +85,7 @@ class Bibtab {
         title()
         year()
 	// instruments need also be present in bibtosql_sv.awk
-        instrument(inList:["NPDF","SMARTS","HIPD","HIPPO","FP5","SCD","FDS","SPEAR","LQD","ASTERIX","PCS","PHAROS"])
+        instrument(inList:["NPDF","SMARTS","HIPD","HIPPO","FP5","SCD","FDS","SPEAR","LQD","ASTERIX","PCS","PHAROS","1FP12","4FP15R","DANCE","FIGARO","GEANIE",""])
         citations(nullable: true, max: 2147483647)
         url()
         authorcount(nullable: true, max: 2147483647)
