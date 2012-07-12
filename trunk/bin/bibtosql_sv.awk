@@ -886,6 +886,17 @@ function do_entry(    month_number,page_count)
       instrument = "PCS"
     } else if (index(toupper(get_value(query)),"PHAROS") != 0) {
       instrument = "PHAROS"
+    ## WNR instruments
+    } else if (index(toupper(get_value(query)),"1FP12") != 0) {
+      instrument = "1FP12"
+    } else if (index(toupper(get_value(query)),"4FP15R") != 0) {
+      instrument = "4FP15R"
+    } else if (index(toupper(get_value(query)),"DANCE") != 0) {
+      instrument = "DANCE"
+    } else if (index(toupper(get_value(query)),"FIGARO") != 0) {
+      instrument = "FIGARO"
+    } else if (index(toupper(get_value(query)),"GEANIE") != 0) {
+      instrument = "GEANIE"
     }
 #SV120708 dome
 
