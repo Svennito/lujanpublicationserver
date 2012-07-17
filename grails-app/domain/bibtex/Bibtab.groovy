@@ -14,6 +14,8 @@ package bibtex
  *
  */
 class Bibtab {
+    static searchable = true
+
     static mapping = {
          table 'bibtab'
          // version is set to false, because this isn't available by default for legacy databases

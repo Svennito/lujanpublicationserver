@@ -11,10 +11,72 @@ class BibtabController {
     }
 
     def list() {
+	// SV 120714 Trying filter, following http://kiwigrails.blogspot.com/2008/07/filtering-list.html
+	if (!params.FilterName) {
+	  params.FilterName = ""
+	}
+	if (!params.FilterYear) {
+	  params.FilterYear= ""
+	}
+	if (!params.FilterInst) {
+	  params.FilterInst = ""
+	}
+	flash.FilterName = params.FilterName
+	flash.FilterYear = params.FilterYear
+	flash.FilterInst = params.FilterInst
+	// end
         params.max = Math.min(params.max ? params.int('max') : 10, 100)	
-        [bibtabInstanceList: Bibtab.list(params), bibtabInstanceTotal: Bibtab.count()]
+
+	// SV 120714 Trying filter, following http://kiwigrails.blogspot.com/2008/07/filtering-list.html
+	def query
+	def criteria = Bibtab.createCriteria()
+	def results
+
+	println "FilterName: <"+params.FilterName+">"
+	println "FilterYear: <"+params.FilterYear+">"
+	println "FilterInst: <"+params.FilterInst+">"
+	query = {
+	  and {
+	    like("author", '%'+params.FilterName + '%')
+	    like("year", '%'+params.FilterYear + '%')
+	    like("instrument", '%'+params.FilterInst + '%')
+	    or {
+	      eq("falsehit", false)
+	      isNull("falsehit")
+	    }
+	    
+	  }
+	}
+	
+	results = criteria.list(params, query)
+	println "results.count: <"+results.getTotalCount()+">"
+	render(view:'list', model:[ bibtabInstanceList: results ])
+	// end
+        // [bibtabInstanceList: Bibtab.list(params), bibtabInstanceTotal: Bibtab.count()] // SV 120717 removed
     }
 
+    // SV 120712 insert search
+    def searchableService //inject the service (make sure the name is correct)
+    
+    def search = {
+	def query = params.q
+	def biblist
+	def total
+
+	println query
+	if(query){
+	    def srchResults = searchableService.search(query)
+	    biblist = srchResults.results
+	    total = srchResults.total
+	}else{
+	    biblist = Bibtab.list(params)
+	    total = Bibtab.count()
+	}
+	render(view: "list",
+	      model: [bibtabInstanceList: biblist,
+		      bibtabInstanceTotal: total,
+                      query:params.q])
+    }
 
     def list_without_falsehits() {
         params.max = Math.min(params.max ? params.int('max') : 20, 100)
