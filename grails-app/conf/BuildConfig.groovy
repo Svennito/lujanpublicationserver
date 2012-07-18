@@ -5,8 +5,10 @@ grails.project.test.reports.dir = "target/test-reports"
 grails.project.target.level = 1.6
 grails.project.source.level = 1.6
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
+grails.server.port.http=8317	// to avoid collision with LANL proxy
 
 grails.project.dependency.resolution = {
+    
     // inherit Grails' default dependencies
     inherits("global") {
         // uncomment to disable ehcache
@@ -41,6 +43,7 @@ grails.project.dependency.resolution = {
         runtime ":hibernate:$grailsVersion"
         runtime ":jquery:1.7.2"
         runtime ":resources:1.1.6"
+	runtime ':jasper:1.5' 
 
         // Uncomment these (or add new ones) to enable additional resources capabilities
         //runtime ":zipped-resources:1.0"
