@@ -5,7 +5,9 @@
 	<head>
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'bibtab.label', default: 'Bibtab')}" />
-		<title><g:message code="default.show.label" args="[entityName]" /></title>
+<!-- SV120719
+		<title><g:message code="default.show.label" args="[entityName]" /></title> -->
+		<title>Show Publication</title>
 	</head>
 	<body>
 		<a href="#show-bibtab" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
@@ -21,7 +23,7 @@
 			</ul>
 		</div>
 		<div id="show-bibtab" class="content scaffold-show" role="main">
-			<h1><g:message code="default.show.label" args="[entityName]" /></h1>
+			<h1>Show Publication</h1>
 			<g:if test="${flash.message}">
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
@@ -517,11 +519,11 @@
 			<g:form>
 				<fieldset class="buttons">
 					<g:hiddenField name="id" value="${bibtabInstance?.id}" />
-					<g:link class="edit" action="edit" id="${bibtabInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
-<!-- SV 120709 We shouldn't delete, but rather mark as falsehit
-					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
--->
-					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('If this record was created automatically, you should edit the record and set falsehit to true rather than deleting, otherwise it will show up again. Still want to delete?');" />
+					<g:link class="edit" action="edit" id="${bibtabInstance?.id}"><g:message code="default.button.edit.label"  params="${flash}" default="Edit" /></g:link>
+<!--  SV 120709 We shouldn't delete, but rather mark as falsehit -->
+<!-- 					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" /> -->
+
+					<g:actionSubmit class="delete" action="set_falsehit"  params="${flash}" value="False Hit" onclick="return confirm('This publication will be marked as a false hit and you will never see it again. Proceed?');" />
 				</fieldset>
 			</g:form>
 		</div>
