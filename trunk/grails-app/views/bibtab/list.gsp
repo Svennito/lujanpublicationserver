@@ -39,10 +39,20 @@
 					<tbody>
 					    <tr class='prop'>
 						    <td valign='top' class='name'>
+							    <label for='FilterFacility'>Facility:</label>
+						    </td>
+						    <td valign='top' class='value'>
+<select name="FilterFacility" id="FilterFacility" name="FilterFacility" value="${flash.FilterFacility}">
+<option value=""        ${flash.FilterFacility== '' ? 'selected="selected="' : ''}      >any</option>
+<option value="LUJAN"   ${flash.FilterFacility== 'LUJAN' ? 'selected="selected="' : ''}"    >Lujan</option>
+<option value="WNR"     ${flash.FilterFacility== 'WNR' ? 'selected="selected="' : ''}"      >WNR</option>
+</select>
+						    </td>
+						    <td valign='top' class='name'>
 							    <label for='FilterName'>Name:</label>
 						    </td>
 						    <td valign='top' class='value'>
-							    <input type="text" id="FilterName" name="FilterName" value="${flash.FilterName}"/>
+							    <input type="text" id="FilterName" size="8" name="FilterName" value="${flash.FilterName}"/>
 		    
 						    </td>
 						    <td valign='top' class='name'>
@@ -58,21 +68,58 @@
 <!--
 							    <input type="text" id="FilterInst" name="FilterInst" value="${flash.FilterInst}"/>
 -->
-<select name="FilterInst" id="FilterInst" name="FilterInst" value="${flash.FilterInst}">
-<option value=""        ${flash.FilterInst == '' ? 'selected="selected="' : ''}         >any</option>
-<option value="NPDF"    ${flash.FilterInst == 'NPDF' ? 'selected="selected="' : ''}"    >NPDF</option>
-<option value="SMARTS"  ${flash.FilterInst == 'SMARTS' ? 'selected="selected="' : ''}"  >SMARTS</option>
-<option value="HIPD"    ${flash.FilterInst == 'HIPD' ? 'selected="selected="' : ''}"    >HIPD</option>
-<option value="HIPPO"   ${flash.FilterInst == 'HIPPO' ? 'selected="selected="' : ''}"   >HIPPO</option>
-<option value="FP5"     ${flash.FilterInst == 'FP5' ? 'selected="selected="' : ''}"     >FP5</option>
-<option value="SCD"     ${flash.FilterInst == 'SCD' ? 'selected="selected="' : ''}"     >SCD</option>
-<option value="FDS"     ${flash.FilterInst == 'FDS' ? 'selected="selected="' : ''}"     >FDS</option>
-<option value="SPEAR"   ${flash.FilterInst == 'SPEAR' ? 'selected="selected="' : ''}"   >SPEAR</option>
-<option value="LQD"     ${flash.FilterInst == 'LQD' ? 'selected="selected="' : ''}"     >LQD</option>
-<option value="ASTERIX" ${flash.FilterInst == 'ASTERIX' ? 'selected="selected="' : ''}" >ASTERIX</option>
-<option value="PCS"     ${flash.FilterInst == 'PCS' ? 'selected="selected="' : ''}"     >PCS</option>
-<option value="PHAROS"  ${flash.FilterInst == 'PHAROS' ? 'selected="selected="' : ''}"  >PHAROS</option>
-</select>
+<g:if test="${flash.FilterFacility == 'WNR'}">
+    <select name="FilterInst" id="FilterInst" name="FilterInst" value="${flash.FilterInst}">
+    <option value=""        ${flash.FilterInst == '' ? 'selected="selected="' : ''}         >any</option>
+    <option value="1FP12"   ${flash.FilterInst == '1FP12' ? 'selected="selected="' : ''}"   >1FP12</option>
+    <option value="4FP15R"  ${flash.FilterInst == '4FP15R' ? 'selected="selected="' : ''}"  >4FP15R</option>
+    <option value="DANCE"   ${flash.FilterInst == 'DANCE' ? 'selected="selected="' : ''}"   >DANCE</option>
+    <option value="FIGARO"  ${flash.FilterInst == 'FIGARO' ? 'selected="selected="' : ''}"  >FIGARO</option>
+    <option value="GEANIE"  ${flash.FilterInst == 'GEANIE' ? 'selected="selected="' : ''}"  >GEANIE</option>
+    <option value="WNR"     ${flash.FilterInst == 'WNR' ? 'selected="selected="' : ''}"     >WNR</option>
+</g:if>
+<g:else>
+    <g:if test="${flash.FilterFacility == 'LUJAN'}">
+	<select name="FilterInst" id="FilterInst" name="FilterInst" value="${flash.FilterInst}">
+	<option value=""        ${flash.FilterInst == '' ? 'selected="selected="' : ''}         >any</option>
+	<option value="NPDF"    ${flash.FilterInst == 'NPDF' ? 'selected="selected="' : ''}"    >NPDF</option>
+	<option value="SMARTS"  ${flash.FilterInst == 'SMARTS' ? 'selected="selected="' : ''}"  >SMARTS</option>
+	<option value="HIPD"    ${flash.FilterInst == 'HIPD' ? 'selected="selected="' : ''}"    >HIPD</option>
+	<option value="HIPPO"   ${flash.FilterInst == 'HIPPO' ? 'selected="selected="' : ''}"   >HIPPO</option>
+	<option value="FP5"     ${flash.FilterInst == 'FP5' ? 'selected="selected="' : ''}"     >FP5</option>
+	<option value="SCD"     ${flash.FilterInst == 'SCD' ? 'selected="selected="' : ''}"     >SCD</option>
+	<option value="FDS"     ${flash.FilterInst == 'FDS' ? 'selected="selected="' : ''}"     >FDS</option>
+	<option value="SPEAR"   ${flash.FilterInst == 'SPEAR' ? 'selected="selected="' : ''}"   >SPEAR</option>
+	<option value="LQD"     ${flash.FilterInst == 'LQD' ? 'selected="selected="' : ''}"     >LQD</option>
+	<option value="ASTERIX" ${flash.FilterInst == 'ASTERIX' ? 'selected="selected="' : ''}" >ASTERIX</option>
+	<option value="PCS"     ${flash.FilterInst == 'PCS' ? 'selected="selected="' : ''}"     >PCS</option>
+	<option value="PHAROS"  ${flash.FilterInst == 'PHAROS' ? 'selected="selected="' : ''}"  >PHAROS</option>
+	</select>
+    </g:if>
+    <g:else>
+	<select name="FilterInst" id="FilterInst" name="FilterInst" value="${flash.FilterInst}">
+	<option value=""        ${flash.FilterInst == '' ? 'selected="selected="' : ''}         >any</option>
+	<option value="NPDF"    ${flash.FilterInst == 'NPDF' ? 'selected="selected="' : ''}"    >NPDF</option>
+	<option value="SMARTS"  ${flash.FilterInst == 'SMARTS' ? 'selected="selected="' : ''}"  >SMARTS</option>
+	<option value="HIPD"    ${flash.FilterInst == 'HIPD' ? 'selected="selected="' : ''}"    >HIPD</option>
+	<option value="HIPPO"   ${flash.FilterInst == 'HIPPO' ? 'selected="selected="' : ''}"   >HIPPO</option>
+	<option value="FP5"     ${flash.FilterInst == 'FP5' ? 'selected="selected="' : ''}"     >FP5</option>
+	<option value="SCD"     ${flash.FilterInst == 'SCD' ? 'selected="selected="' : ''}"     >SCD</option>
+	<option value="FDS"     ${flash.FilterInst == 'FDS' ? 'selected="selected="' : ''}"     >FDS</option>
+	<option value="SPEAR"   ${flash.FilterInst == 'SPEAR' ? 'selected="selected="' : ''}"   >SPEAR</option>
+	<option value="LQD"     ${flash.FilterInst == 'LQD' ? 'selected="selected="' : ''}"     >LQD</option>
+	<option value="ASTERIX" ${flash.FilterInst == 'ASTERIX' ? 'selected="selected="' : ''}" >ASTERIX</option>
+	<option value="PCS"     ${flash.FilterInst == 'PCS' ? 'selected="selected="' : ''}"     >PCS</option>
+	<option value="PHAROS"  ${flash.FilterInst == 'PHAROS' ? 'selected="selected="' : ''}"  >PHAROS</option>
+	<option value="1FP12"   ${flash.FilterInst == '1FP12' ? 'selected="selected="' : ''}"   >1FP12</option>
+	<option value="4FP15R"  ${flash.FilterInst == '4FP15R' ? 'selected="selected="' : ''}"  >4FP15R</option>
+	<option value="DANCE"   ${flash.FilterInst == 'DANCE' ? 'selected="selected="' : ''}"   >DANCE</option>
+	<option value="FIGARO"  ${flash.FilterInst == 'FIGARO' ? 'selected="selected="' : ''}"  >FIGARO</option>
+	<option value="GEANIE"  ${flash.FilterInst == 'GEANIE' ? 'selected="selected="' : ''}"  >GEANIE</option>
+	<option value="WNR"     ${flash.FilterInst == 'WNR' ? 'selected="selected="' : ''}"     >WNR</option>
+	</select>
+    </g:else>
+</g:else>
 						    </td>
 						    <td valign='top' class='button'>
 						      <span class="button"><input class="save" type="submit" value="Filter" /></span>
@@ -99,6 +146,8 @@
 						<g:sortableColumn property="year" title="${message(code: 'bibtab.year.label', default: 'Year')}"  params="${flash}"/>
 					
 						<g:sortableColumn property="journal" title="${message(code: 'bibtab.year.label', default: 'Journal')}"  params="${flash}"/>
+
+						<g:sortableColumn property="bibtype" title="${message(code: 'bibtab.year.label', default: 'Type')}"  params="${flash}"/>
 					
 						<g:sortableColumn property="instrument" title="${message(code: 'bibtab.instrument.label', default: 'Instrument')}"  params="${flash}"/>
 					
@@ -113,7 +162,7 @@
 				<g:each in="${bibtabInstanceList}" status="i" var="bibtabInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
-						<td><g:link action="show" id="${bibtabInstance.id}">${fieldValue(bean: bibtabInstance, field: "author")}</g:link></td>
+						<td><g:link action="show"  params="${flash}" id="${bibtabInstance.id}">${fieldValue(bean: bibtabInstance, field: "author")}</g:link></td>
 					<!-- make title the link to the paper
 						<td>${fieldValue(bean: bibtabInstance, field: "title")}</td>
 					-->
@@ -122,6 +171,8 @@
 						<td>${fieldValue(bean: bibtabInstance, field: "year")}</td>
 					
 						<td>${fieldValue(bean: bibtabInstance, field: "journal")}</td>
+					
+						<td>${fieldValue(bean: bibtabInstance, field: "bibtype")}</td>
 					
 						<td>${fieldValue(bean: bibtabInstance, field: "instrument")}</td>
 					

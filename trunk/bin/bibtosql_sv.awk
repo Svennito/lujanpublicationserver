@@ -279,6 +279,7 @@ function collect_entry(s)
 	citations = 0
 	query = ""
 	instrument = ""
+	facilitiy = ""
 	falseHit = ""
 	primaryData = ""
 	dateCreated = ""
@@ -327,6 +328,7 @@ function collect_entry(s)
 	In_citations = 0
 	In_query = 0
 	In_instrument = 0
+	In_facility = 0
 	In_falseHit = 0
 	In_primaryData = 0
 	In_dateCreated = 0
@@ -864,39 +866,59 @@ function do_entry(    month_number,page_count)
 #SV120708 figure out the instrument from the query string
     if (index(toupper(get_value(query)),"HIPPO") != 0) {
       instrument = "HIPPO"
+      facility 	 = "LUJAN"
     } else if (index(toupper(get_value(query)),"NPDF") != 0) {
       instrument = "NPDF"
+      facility 	 = "LUJAN"
     } else if (index(toupper(get_value(query)),"SMARTS") != 0) {
       instrument = "SMARTS"
+      facility 	 = "LUJAN"
     } else if (index(toupper(get_value(query)),"HIPD") != 0) {
       instrument = "HIPD"
+      facility 	 = "LUJAN"
     } else if (index(toupper(get_value(query)),"FP5") != 0) {
       instrument = "FP5"
+      facility 	 = "WNR"
     } else if (index(toupper(get_value(query)),"SCD") != 0) {
       instrument = "SCD"
+      facility 	 = "LUJAN"
     } else if (index(toupper(get_value(query)),"FDS") != 0) {
       instrument = "FDS"
+      facility 	 = "LUJAN"
     } else if (index(toupper(get_value(query)),"SPEAR") != 0) {
       instrument = "SPEAR"
+      facility 	 = "LUJAN"
     } else if (index(toupper(get_value(query)),"LQD") != 0) {
       instrument = "LQD"
+      facility 	 = "LUJAN"
     } else if (index(toupper(get_value(query)),"ASTERIX") != 0) {
       instrument = "ASTERIX"
+      facility 	 = "LUJAN"
     } else if (index(toupper(get_value(query)),"PCS") != 0) {
       instrument = "PCS"
+      facility 	 = "LUJAN"
     } else if (index(toupper(get_value(query)),"PHAROS") != 0) {
       instrument = "PHAROS"
+      facility 	 = "LUJAN"
     ## WNR instruments
     } else if (index(toupper(get_value(query)),"1FP12") != 0) {
       instrument = "1FP12"
+      facility 	 = "WNR"
     } else if (index(toupper(get_value(query)),"4FP15R") != 0) {
       instrument = "4FP15R"
+      facility 	 = "WNR"
     } else if (index(toupper(get_value(query)),"DANCE") != 0) {
       instrument = "DANCE"
+      facility 	 = "WNR"
     } else if (index(toupper(get_value(query)),"FIGARO") != 0) {
       instrument = "FIGARO"
+      facility 	 = "WNR"
     } else if (index(toupper(get_value(query)),"GEANIE") != 0) {
       instrument = "GEANIE"
+      facility 	 = "WNR"
+    } else if (index(toupper(get_value(query)),"WNR") != 0) {
+      instrument = "WNR"
+      facility 	 = "WNR"
     }
 #SV120708 dome
 
@@ -908,7 +930,7 @@ function do_entry(    month_number,page_count)
     print "\tDOI, ISBN, ISBN13, ISSN, LCCN, MRclass, MRnumber, MRreviewer,"
     print "\tbibdate, bibsource, bibtimestamp, note, series, URL, abstract,"
 #SV 120707 adding extra fields
-    print "\tkeywords, remark, subject, TOC, ZMnumber, citations, query, instrument, falsehit, primarydata, date_created, last_updated, entry)"
+    print "\tkeywords, remark, subject, TOC, ZMnumber, citations, query, instrument, facility, falsehit, primarydata, date_created, last_updated, entry)"
     print "\tVALUES ("
     printf("\t%s,\n", get_namecount(get_value(Author)))
     printf("\t%s,\n", get_namecount(get_value(Editor)))
@@ -962,6 +984,7 @@ function do_entry(    month_number,page_count)
     printf("\t%s,\n", protect(get_value(citations)))
     printf("\t%s,\n", protect(get_value(query)))
     printf("\t%s,\n", protect(instrument))
+    printf("\t%s,\n", protect(facility))
     printf("\t%s,\n", protect(get_value(falseHit)))
     printf("\t%s,\n", protect(get_value(primaryData)))
     printf("\t%s,\n", protect(get_value(dateCreated)))
@@ -1402,6 +1425,7 @@ function initialize(    k)
 	print "\tcitations    INTEGER,"
 	print "\tquery        " TEXT ","
 	print "\tInstrument   " TEXT ","
+	print "\tFacility     " TEXT ","
 	print "\tfalsehit     BOOLEAN,"
 	print "\tprimarydata  BOOLEAN,"
 	print "\tdate_created  DATE,"

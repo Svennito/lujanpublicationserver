@@ -19,7 +19,13 @@ bibclean $1.bib > $1_clean.bib
 
 echo "Created $1_clean.bib, ready for bibtosql..."
 echo "Creating SQL statements for MySQL database..."
-bibtosql_sv < $1_clean.bib > $1.sql
+if [ -e ./bibtosql_sv ]; then
+  # if it exists in the current path, call it
+  ./bibtosql_sv < $1_clean.bib > $1.sql
+else
+  # ... if not assume it's in the path and hope for the best 8-)
+  bibtosql_sv < $1_clean.bib > $1.sql
+fi
 echo "SQL statements written to $1.sql."
 
 echo "Sending SQL statements to database..."
