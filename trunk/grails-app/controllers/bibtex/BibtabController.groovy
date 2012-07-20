@@ -183,4 +183,65 @@ class BibtabController {
 	    redirect(action: "list")
 	}
     }
+
+    // SV 120719 export functions
+    def exportService
+
+    def list = {
+
+	if (!params.FilterFacility) {
+	  params.FilterFacility = ""
+	}
+	if (!params.FilterName) {
+	  params.FilterName = ""
+	}
+	if (!params.FilterYear) {
+	  params.FilterYear= ""
+	}
+	if (!params.FilterInst) {
+	  params.FilterInst = ""
+	}
+	flash.FilterFacility = params.FilterFacility
+	flash.FilterName = params.FilterName
+	flash.FilterYear = params.FilterYear
+	flash.FilterInst = params.FilterInst
+	// end
+        params.max = Math.min(params.max ? params.int('max') : 10, 100)	
+
+	// SV 120714 Trying filter, following http://kiwigrails.blogspot.com/2008/07/filtering-list.html
+	def query
+	def criteria = Bibtab.createCriteria()
+	def results
+
+	println "FilterFacility: <"+params.FilterFacility+">"
+	println "FilterName: <"+params.FilterName+">"
+	println "FilterYear: <"+params.FilterYear+">"
+	println "FilterInst: <"+params.FilterInst+">"
+	query = {
+	  and {
+	    like("facility", '%'+params.FilterFacility + '%')
+	    like("author", '%'+params.FilterName + '%')
+	    like("year", '%'+params.FilterYear + '%')
+	    like("instrument", '%'+params.FilterInst + '%')
+	    or {
+	      eq("falsehit", false)
+	      isNull("falsehit")
+	    }
+	    
+	  }
+	}
+
+	if(params?.format && params.format != "html"){
+		response.contentType = ConfigurationHolder.config.grails.mime.types[params.format]
+		response.setHeader("Content-disposition", "attachment; filename=Bibtab.${params.extension}")
+
+		List fields = ["author", "title"]
+		Map labels = ["author": "Author", "title": "Title"]
+
+		exportService.export(params.format, response.outputStream,Bibtab.list(params), [:], [:])
+	}
+
+        [ bibtabInstanceList: criteria.list(params, query) ]
+	
+    }
 }

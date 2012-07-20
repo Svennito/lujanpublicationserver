@@ -2,6 +2,7 @@
 <%@ page import="bibtex.Bibtab" %>
 <!doctype html>
 <html>
+<r:require module="export"/>
 	<head>
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'bibtab.label', default: 'Bibtab')}" />
@@ -213,6 +214,11 @@
 		  Instrument: <input type="text" name="Instrument"/>
 		  Year: <input type="text" name="Year"/>
 		</g:jasperReport>
+		</div>
+		<h1>
+		Export lists (Enter instrument in capital letters, year with four digits, click format icon):
+		</h1>
+		    <export:formats formats="['csv', 'excel', 'ods', 'pdf', 'rtf', 'xml']" />
 		</div>
 	</body>
 </html>
