@@ -1,10 +1,7 @@
 package bibtex
 /*
  * To do:
- * - don't show falsehits in list, but when flagging one, double-check
- * - make users who can see only their instruments
- * - implement search
- * - filter single instrument
+ * - set default filter settings
  * - disable edit of citations
 /**
  * The Bibtab entity.
@@ -73,6 +70,7 @@ class Bibtab {
     String toc
     String zmnumber
     Integer citations
+    String citelinks
     String query
     String instrument
     String facility
@@ -88,14 +86,15 @@ class Bibtab {
         title()
         year()
 	// instruments need also be present in bibtosql_sv.awk
-        instrument(inList:["NPDF","SMARTS","HIPD","HIPPO","FP5","SCD","FDS","SPEAR","LQD","ASTERIX","PCS","PHAROS","1FP12","4FP15R","DANCE","FIGARO","GEANIE","WNR",""])
+        instrument(inList:["NPDF","SMARTS","HIPD","HIPPO","FP5","SCD","FDS","SPEAR","LQD","ASTERIX","PCS","PHAROS","MANAGEMENT","SPALLATION","1FP12","4FP15R","DANCE","FIGARO","GEANIE","WNR",""])
 	facility(inList:["LUJAN","WNR",""])
         citations(nullable: true, max: 2147483647)
         url(nullable:true)
+        citelinks(nullable:true)
         authorcount(nullable: true, max: 2147483647)
         editorcount(nullable: true, max: 2147483647)
         pagecount(nullable: true, max: 2147483647)
-        bibtype(inList:["article","inproceedings","phdthesis","book","techreport"])
+        bibtype(inList:["article","inproceedings","phdthesis","book","techreport","misc"])
         filename(nullable:true)
         editor(nullable:true)
         booktitle(nullable:true)

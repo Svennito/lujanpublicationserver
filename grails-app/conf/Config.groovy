@@ -22,6 +22,10 @@ grails.mime.types = [ html: ['text/html','application/xhtml+xml'],
                       atom: 'application/atom+xml',
                       css: 'text/css',
                       csv: 'text/csv',
+		      pdf: 'application/pdf',		// SV120723 for export
+                      rtf: 'application/rtf',		// SV120723 for export
+                      excel: 'application/vnd.ms-excel',// SV120723 for export
+                      ods: 'application/vnd.oasis.opendocument.spreadsheet',// SV120723 for export
                       all: '*/*',
                       json: ['application/json','text/json'],
                       form: 'application/x-www-form-urlencoded',
