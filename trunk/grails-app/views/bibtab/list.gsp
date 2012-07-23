@@ -2,14 +2,31 @@
 <%@ page import="bibtex.Bibtab" %>
 <!doctype html>
 <html>
-<r:require module="export"/>
 	<head>
+		<r:require module="export"/>
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'bibtab.label', default: 'Bibtab')}" />
 <!--  SV120708 Show nicer title and give some hints on how to use this...
 		<title><g:message code="default.list.label" args="[entityName]" /></title>
 -->
 		<title>Publication List</title>
+<!--  SV120722 Define function to set cookie once the filter action is triggered
+		use grails tag to read it and set the experiration in the controller
+-->
+		<script type="text/javascript">
+		  function setCookie(c_name,value,exdays) {
+		    var exdate=new Date();
+		    exdate.setDate(exdate.getDate() + exdays);
+		    var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
+		    document.cookie=c_name + "=" + c_value;
+		  }
+		  function saveFilter() {
+		    setCookie("LPS_filter_facility",document.filter.FilterFacility.value,365)
+		    setCookie("LPS_filter_name",document.filter.FilterName.value,365)
+		    setCookie("LPS_filter_year",document.filter.FilterYear.value,365)
+		    setCookie("LPS_filter_instr",document.filter.FilterInstr.value,365)
+		  }
+		</script>
 	</head>
 	<body>
 		<a href="#list-bibtab" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
@@ -34,7 +51,7 @@
       http://kiwigrails.blogspot.com/2008/07/filtering-list.html
 -->
 			<div class="body">
-			    <g:form action="list" method="post" >
+			    <g:form action="list" method="post" name="filter">
 				<div class="dialog">
 				    <table>
 					<tbody>
@@ -43,10 +60,16 @@
 							    <label for='FilterFacility'>Facility:</label>
 						    </td>
 						    <td valign='top' class='value'>
-<select name="FilterFacility" id="FilterFacility" name="FilterFacility" value="${flash.FilterFacility}">
+<!--  assign filter values from cookies to flash -->
+<!--<select name="FilterFacility" id="FilterFacility" name="FilterFacility" value="${flash.FilterFacility}">
 <option value=""        ${flash.FilterFacility== '' ? 'selected="selected="' : ''}      >any</option>
 <option value="LUJAN"   ${flash.FilterFacility== 'LUJAN' ? 'selected="selected="' : ''}"    >Lujan</option>
 <option value="WNR"     ${flash.FilterFacility== 'WNR' ? 'selected="selected="' : ''}"      >WNR</option>
+</select>-->
+<select name="FilterFacility" id="FilterFacility" name="FilterFacility" value="${flash.FilterFacility}">
+<option value=""        ${g.cookie(name:"LPS_filter_facility") == '' ? 'selected="selected="' : ''}      >any</option>
+<option value="LUJAN"   ${g.cookie(name:"LPS_filter_facility") == 'LUJAN' ? 'selected="selected="' : ''}"    >Lujan</option>
+<option value="WNR"     ${g.cookie(name:"LPS_filter_facility") == 'WNR' ? 'selected="selected="' : ''}"      >WNR</option>
 </select>
 						    </td>
 						    <td valign='top' class='name'>
@@ -95,6 +118,8 @@
 	<option value="ASTERIX" ${flash.FilterInst == 'ASTERIX' ? 'selected="selected="' : ''}" >ASTERIX</option>
 	<option value="PCS"     ${flash.FilterInst == 'PCS' ? 'selected="selected="' : ''}"     >PCS</option>
 	<option value="PHAROS"  ${flash.FilterInst == 'PHAROS' ? 'selected="selected="' : ''}"  >PHAROS</option>
+	<option value="MANAGEMENT"  ${flash.FilterInst == 'MANAGEMENT' ? 'selected="selected="' : ''}"  >Management</option>
+	<option value="SPALLATION"  ${flash.FilterInst == 'SPALLATION' ? 'selected="selected="' : ''}"  >Spallation</option>
 	</select>
     </g:if>
     <g:else>
@@ -112,6 +137,8 @@
 	<option value="ASTERIX" ${flash.FilterInst == 'ASTERIX' ? 'selected="selected="' : ''}" >ASTERIX</option>
 	<option value="PCS"     ${flash.FilterInst == 'PCS' ? 'selected="selected="' : ''}"     >PCS</option>
 	<option value="PHAROS"  ${flash.FilterInst == 'PHAROS' ? 'selected="selected="' : ''}"  >PHAROS</option>
+	<option value="MANAGEMENT"  ${flash.FilterInst == 'MANAGEMENT' ? 'selected="selected="' : ''}"  >Management</option>
+	<option value="SPALLATION"  ${flash.FilterInst == 'SPALLATION' ? 'selected="selected="' : ''}"  >Spallation</option>
 	<option value="1FP12"   ${flash.FilterInst == '1FP12' ? 'selected="selected="' : ''}"   >1FP12</option>
 	<option value="4FP15R"  ${flash.FilterInst == '4FP15R' ? 'selected="selected="' : ''}"  >4FP15R</option>
 	<option value="DANCE"   ${flash.FilterInst == 'DANCE' ? 'selected="selected="' : ''}"   >DANCE</option>
@@ -123,7 +150,8 @@
 </g:else>
 						    </td>
 						    <td valign='top' class='button'>
-						      <span class="button"><input class="save" type="submit" value="Filter" /></span>
+<!-- 						      <span class="button"><input class="save" type="submit" value="Filter" onClick="SaveFilter("${flash.FilterFacility}","${flash.FilterInst}","${flash.FilterName}","${flash.FilterYear}")"/></span> -->
+						      <span class="button"><input class="save" type="submit" value="Filter" onClick="saveFilter()"/></span> 
 						    </td>
 						    <td>
 						      ${bibtabInstanceList.getTotalCount()} items
@@ -177,7 +205,7 @@
 					
 						<td>${fieldValue(bean: bibtabInstance, field: "instrument")}</td>
 					
-						<td>${fieldValue(bean: bibtabInstance, field: "citations")}</td>
+						<td><a href="${fieldValue(bean: bibtabInstance, field: "citelinks")}" target="_blank" >${fieldValue(bean: bibtabInstance, field: "citations")}</a></td>
 
 					</tr>
 				</g:each>
@@ -218,7 +246,7 @@
 		<h1>
 		Export lists (Enter instrument in capital letters, year with four digits, click format icon):
 		</h1>
-		    <export:formats formats="['csv', 'excel', 'ods', 'pdf', 'rtf', 'xml']" />
+		    <export:formats formats="['csv', 'excel', 'ods', 'pdf', 'rtf', 'xml']" params="${flash}"/>
 		</div>
 	</body>
 </html>
