@@ -9,6 +9,9 @@
 ./update_bibtex.sh LQD
 ./update_bibtex.sh ASTERIX
 ./update_bibtex.sh PCS
+./update_bibtex.sh PHAROS
+./update_bibtex.sh MANAGEMENT
+./update_bibtex.sh SPALLATION
 ./update_bibtex.sh WNR
 ./update_bibtex.sh 1FP12
 ./update_bibtex.sh 4FP15R
