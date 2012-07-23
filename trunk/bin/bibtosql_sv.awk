@@ -277,6 +277,7 @@ function collect_entry(s)
  	ZMnumber = ""
 #SV120707 adding fields
 	citations = 0
+	citelinks = ""
 	query = ""
 	instrument = ""
 	facilitiy = ""
@@ -326,6 +327,7 @@ function collect_entry(s)
 	In_ZMnumber = 0
 #SV120707 Adding our fields
 	In_citations = 0
+	In_citelinks = 0
 	In_query = 0
 	In_instrument = 0
 	In_facility = 0
@@ -814,6 +816,17 @@ function collect_entry(s)
 	if (s ~ "\", *$")
 	    In_citations = 0
     }
+    else if (s ~ "^ *citelinks *=")
+    {
+	citelinks = s
+	In_citelinks = (s !~ "\", *$")
+    }
+    else if (In_citelinks)
+    {
+	citelinks = citelinks " " s
+	if (s ~ "\", *$")
+	    In_citelinks = 0
+    }
     else if (s ~ "^ *query *=")
     {
 	query = s
@@ -824,6 +837,28 @@ function collect_entry(s)
 	query = query " " s
 	if (s ~ "\", *$")
 	    In_query = 0
+    }
+    else if (s ~ "^ *instrument *=")
+    {
+	instrument = s
+	In_instrument = (s !~ "\", *$")
+    }
+    else if (In_instrument)
+    {
+	instrument = instrument " " s
+	if (s ~ "\", *$")
+	    In_instrument = 0
+    }
+    else if (s ~ "^ *facility *=")
+    {
+	facility = s
+	In_facility = (s !~ "\", *$")
+    }
+    else if (In_facility)
+    {
+	facility = facility " " s
+	if (s ~ "\", *$")
+	    In_facility = 0
     }
 #SV120707 done
     if (substr(s,1,1) == "}")
@@ -919,8 +954,16 @@ function do_entry(    month_number,page_count)
     } else if (index(toupper(get_value(query)),"WNR") != 0) {
       instrument = "WNR"
       facility 	 = "WNR"
+    } 
+    # if the instument and facility fields are populated in the bib file, use them
+    if (get_value(instrument) != "") {
+      instrument = get_value(instrument)
     }
-#SV120708 dome
+    if (get_value(facility) != "") {
+      facility = get_value(facility)
+    }
+
+#SV120708 done
 
     print "INSERT INTO bibtab"
     print "\t(authorcount, editorcount, pagecount, bibtype, filename, id,"
@@ -930,7 +973,7 @@ function do_entry(    month_number,page_count)
     print "\tDOI, ISBN, ISBN13, ISSN, LCCN, MRclass, MRnumber, MRreviewer,"
     print "\tbibdate, bibsource, bibtimestamp, note, series, URL, abstract,"
 #SV 120707 adding extra fields
-    print "\tkeywords, remark, subject, TOC, ZMnumber, citations, query, instrument, facility, falsehit, primarydata, date_created, last_updated, entry)"
+    print "\tkeywords, remark, subject, TOC, ZMnumber, citations, citelinks, query, instrument, facility, falsehit, primarydata, date_created, last_updated, entry)"
     print "\tVALUES ("
     printf("\t%s,\n", get_namecount(get_value(Author)))
     printf("\t%s,\n", get_namecount(get_value(Editor)))
@@ -982,6 +1025,7 @@ function do_entry(    month_number,page_count)
     printf("\t%s,\n", protect(get_value(ZMnumber)))
 #SV120707	adding extra fields
     printf("\t%s,\n", protect(get_value(citations)))
+    printf("\t%s,\n", protect(get_value(citelinks)))
     printf("\t%s,\n", protect(get_value(query)))
     printf("\t%s,\n", protect(instrument))
     printf("\t%s,\n", protect(facility))
@@ -993,7 +1037,7 @@ function do_entry(    month_number,page_count)
     printf("\t%s\n",  protect("\n" Entry))
 #    print ");\n"	#SV120707 don't need semicolon yet
 #SV120707 add ON DUPLICATE KEY UPDATE clause to update in case the key already exists
-    printf("\t) ON DUPLICATE KEY UPDATE citations=%s;\n\n", protect(get_value(citations)))
+    printf("\t) ON DUPLICATE KEY UPDATE citations=%s,citelinks=%s;\n\n", protect(get_value(citations)), protect(get_value(citelinks)))
 #SV120707 done
 
     do_names(get_value(Author))
@@ -1423,6 +1467,7 @@ function initialize(    k)
 	print "\tZMnumber     " TEXT ","
 #SV 120707 start
 	print "\tcitations    INTEGER,"
+	print "\tcitelinks    " TEXT ","
 	print "\tquery        " TEXT ","
 	print "\tInstrument   " TEXT ","
 	print "\tFacility     " TEXT ","
