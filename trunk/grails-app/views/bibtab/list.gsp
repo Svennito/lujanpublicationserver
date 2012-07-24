@@ -1,4 +1,4 @@
-
+<!--  Controls display of the list, also has includes -->
 <%@ page import="bibtex.Bibtab" %>
 <!doctype html>
 <html>
