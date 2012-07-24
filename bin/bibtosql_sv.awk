@@ -1,7 +1,7 @@
 ### -*-awk-*-
 ### modified by Sven Vogel (sven@lanl.gov) for use of reference managment at Lujan
 ### modifications should be indicated by SV YYMMDD comments, start and end markers if multiple lines
-###
+### added new fields for citelinks
 ###
 ###
 ### /u/sy/beebe/tex/bibsql/bibsql-0.00/bibtosql.awk, Thu Oct 23 07:28:21 2008
