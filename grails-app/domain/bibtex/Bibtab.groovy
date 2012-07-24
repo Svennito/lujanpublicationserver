@@ -25,7 +25,7 @@ class Bibtab {
     Integer authorcount
     Integer editorcount
     Integer pagecount
-    String bibtype
+    String bibtype	// article, phdthesis etc.
     String filename
     String author
     String editor
@@ -43,7 +43,7 @@ class Bibtab {
     String school
     String address
     String edition
-    String pages
+    String pages  
     String day
     String month
     String monthnumber
