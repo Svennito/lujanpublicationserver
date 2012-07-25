@@ -244,7 +244,7 @@
 		</g:jasperReport>
 		</div>
 		<h1>
-		Export lists (Enter instrument in capital letters, year with four digits, click format icon):
+		Export current selection:
 		</h1>
 		    <export:formats formats="['csv', 'excel', 'ods', 'pdf', 'rtf', 'xml']" params="${flash}"/>
 		</div>
