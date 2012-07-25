@@ -64,6 +64,7 @@ class BibtabController {
 		println "We're exporting, setting max to 1000..."
 		params.max = 1000
 	}
+	
 	results = criteria.list(params, query)
 	println "results.count: <"+results.getTotalCount()+">"
 	
@@ -74,15 +75,19 @@ class BibtabController {
 		response.contentType = ConfigurationHolder.config.grails.mime.types[params.format]
 		response.setHeader("Content-disposition", "attachment; filename=${params.FilterFacility}_${params.FilterInst}_${params.FilterName}_${params.FilterYear}.${params.extension}")
 		
-		List fields = ["author", "title", "journal", "volume", "pages", "year"]
-		Map labels = ["author": "Author", "title": "Title", "journal":"Journal", "volume":"Vol.","pages":"Pages","year":"Year"]
+		List fields = ["author", "title", "journal"]
+		Map labels = ["author": "Author", "title": "Title", "journal":"Journal"]
 		// Formatter closure
 		def replace_and = { domain, value ->
-			return value.replaceAll(" and ", "; ")
+			return value.replaceAll(" and ", ", ")
 		}
 
-		Map formatters = [author: replace_and]		
-		Map parameters = ["column.widths": [0.5, 0.9, 0.5,0.1,0.1,0.1]]
+		def assemble_cite = { domain, value ->
+			return domain.journal+", "+domain.volume+", "+domain.pages.replaceAll("--", "-")+" ("+domain.year+")"
+		}
+
+		Map formatters = [author: replace_and, journal: assemble_cite]		
+		Map parameters = ["column.widths": [0.5, 0.9, 0.5]]
 		params.max = results.getTotalCount()
 		exportService.export(params.format, response.outputStream, results, fields, labels, formatters, parameters)
 	} 

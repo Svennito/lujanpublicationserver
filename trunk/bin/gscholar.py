@@ -92,10 +92,12 @@ def query(searchstr, year_from=False, year_to=False, exact_phrase=False, allresu
     searchstr = searchstr+"&as_vis=1"
 
     # require exact phrase (helps to filter SMARTS against smart etc.)
-    if exact_phrase != "False" :
-      searchstr = searchstr+"&as_epq="+exact_phrase
-    else:
-      searchstr = searchstr+"&as_epq="
+    # SV 120725 requiring exact phrase fails to find a lot of publications, skip it...
+    #if exact_phrase != "False" :
+      #searchstr = searchstr+"&as_epq="+exact_phrase
+    #else:
+      #searchstr = searchstr+"&as_epq="
+    searchstr = searchstr+"&as_epq="
     
     # require at least one of these terms: lanl "los alamos" lansce
     searchstr = searchstr+"&as_oq=lanl+%22los+alamos%22+lansce&as_eq=&as_occt=any"
