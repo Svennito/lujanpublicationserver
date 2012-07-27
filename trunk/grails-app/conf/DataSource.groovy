@@ -16,7 +16,7 @@ environments {
         dataSource {
             // dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
             dbCreate = "update"
-            url = "jdbc:mysql://localhost/bibtex"
+            url = "jdbc:mysql://localhost/bibtex?autoreconnect=true"
         }          
     }
     test {
