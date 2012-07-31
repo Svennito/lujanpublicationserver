@@ -28,7 +28,7 @@
 		</div>
 
 		<g:layoutBody/>
-		<div class="footer" role="contentinfo">&copy; 2012 Sven Vogel, LANSCE-LC, for problems, questions, ideas, etc. please send email to <a href="mailto:sven@lanl.gov?Subject=Publication%20Database">sven@lanl.gov</a></div>
+		<div class="footer" role="contentinfo">&copy; 2012 Sven Vogel, LANSCE-LC. For problems, questions, ideas, etc. please send email to <a href="mailto:sven@lanl.gov?Subject=Publication%20Database">sven@lanl.gov</a></div>
 		<div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/></div>
 		<g:javascript library="application"/>
         <r:layoutResources />

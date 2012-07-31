@@ -11,7 +11,7 @@
 -->
 		<title>Publication List</title>
 <!--  SV120722 Define function to set cookie once the filter action is triggered
-		use grails tag to read it and set the experiration in the controller
+		use grails tag to read it 
 -->
 		<script type="text/javascript">
 		  function setCookie(c_name,value,exdays) {
@@ -24,8 +24,14 @@
 		    setCookie("LPS_filter_facility",document.filter.FilterFacility.value,365)
 		    setCookie("LPS_filter_name",document.filter.FilterName.value,365)
 		    setCookie("LPS_filter_year",document.filter.FilterYear.value,365)
-		    setCookie("LPS_filter_instr",document.filter.FilterInstr.value,365)
+		    setCookie("LPS_filter_instr",document.filter.FilterInst.value,365)
 		  }
+		  // save filter values also to flash memory
+		  flash.FilterFacility 	= document.filter.FilterFacility.value
+		  flash.FilterName	= document.filter.FilterName.value
+		  flash.FilterYear	= document.filter.FilterYear.value
+		  flash.FilterInst	= document.filter.FilterInst.value
+
 		</script>
 	</head>
 	<body>
@@ -44,12 +50,7 @@
 			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
 -->
 			<h1>Publication List - Click author to edit, click title to see paper, click headers to sort</h1>
-			<g:if test="${flash.message}">
-			<div class="message" role="status">${flash.message}</div>
-			</g:if>
-<!-- FIltering list following 
-      http://kiwigrails.blogspot.com/2008/07/filtering-list.html
--->
+<!--       http://kiwigrails.blogspot.com/2008/07/filtering-list.html -->
 			<div class="body">
 			    <g:form action="list" method="post" name="filter">
 				<div class="dialog">
@@ -76,14 +77,14 @@
 							    <label for='FilterName'>Name:</label>
 						    </td>
 						    <td valign='top' class='value'>
-							    <input type="text" id="FilterName" size="8" name="FilterName" value="${flash.FilterName}"/>
+							    <input type="text" id="FilterName" size="8" name="FilterName" value="${flash.FilterName=g.cookie(name:"LPS_filter_name")}"/>
 		    
 						    </td>
 						    <td valign='top' class='name'>
 							    <label for='FilterYear'>Year:</label>
 						    </td>
 						    <td valign='top' class='value'>
-							    <input type="text" id="FilterYear" size="4" name="FilterYear" value="${flash.FilterYear}"/>
+							    <input type="text" id="FilterYear" size="4" name="FilterYear" value="${flash.FilterYear=g.cookie(name:"LPS_filter_year")}"/>
 						    </td>
 						    <td valign='top' class='name'>
 							    <label for='FilterInst'>Instrument:</label>
@@ -94,57 +95,57 @@
 -->
 <g:if test="${flash.FilterFacility == 'WNR'}">
     <select name="FilterInst" id="FilterInst" name="FilterInst" value="${flash.FilterInst}">
-    <option value=""        ${flash.FilterInst == '' ? 'selected="selected="' : ''}         >any</option>
-    <option value="1FP12"   ${flash.FilterInst == '1FP12' ? 'selected="selected="' : ''}"   >1FP12</option>
-    <option value="4FP15R"  ${flash.FilterInst == '4FP15R' ? 'selected="selected="' : ''}"  >4FP15R</option>
-    <option value="DANCE"   ${flash.FilterInst == 'DANCE' ? 'selected="selected="' : ''}"   >DANCE</option>
-    <option value="FIGARO"  ${flash.FilterInst == 'FIGARO' ? 'selected="selected="' : ''}"  >FIGARO</option>
-    <option value="GEANIE"  ${flash.FilterInst == 'GEANIE' ? 'selected="selected="' : ''}"  >GEANIE</option>
-    <option value="WNR"     ${flash.FilterInst == 'WNR' ? 'selected="selected="' : ''}"     >WNR</option>
+    <option value=""        ${g.cookie(name:"LPS_filter_instr") == '' ? 'selected="selected="' : ''}         >any</option>
+    <option value="1FP12"   ${g.cookie(name:"LPS_filter_instr") == '1FP12' ? 'selected="selected="' : ''}"   >1FP12</option>
+    <option value="4FP15R"  ${g.cookie(name:"LPS_filter_instr") == '4FP15R' ? 'selected="selected="' : ''}"  >4FP15R</option>
+    <option value="DANCE"   ${g.cookie(name:"LPS_filter_instr") == 'DANCE' ? 'selected="selected="' : ''}"   >DANCE</option>
+    <option value="FIGARO"  ${g.cookie(name:"LPS_filter_instr") == 'FIGARO' ? 'selected="selected="' : ''}"  >FIGARO</option>
+    <option value="GEANIE"  ${g.cookie(name:"LPS_filter_instr") == 'GEANIE' ? 'selected="selected="' : ''}"  >GEANIE</option>
+    <option value="WNR"     ${g.cookie(name:"LPS_filter_instr") == 'WNR' ? 'selected="selected="' : ''}"     >WNR</option>
 </g:if>
 <g:else>
     <g:if test="${flash.FilterFacility == 'LUJAN'}">
 	<select name="FilterInst" id="FilterInst" name="FilterInst" value="${flash.FilterInst}">
-	<option value=""        ${flash.FilterInst == '' ? 'selected="selected="' : ''}         >any</option>
-	<option value="NPDF"    ${flash.FilterInst == 'NPDF' ? 'selected="selected="' : ''}"    >NPDF</option>
-	<option value="SMARTS"  ${flash.FilterInst == 'SMARTS' ? 'selected="selected="' : ''}"  >SMARTS</option>
-	<option value="HIPD"    ${flash.FilterInst == 'HIPD' ? 'selected="selected="' : ''}"    >HIPD</option>
-	<option value="HIPPO"   ${flash.FilterInst == 'HIPPO' ? 'selected="selected="' : ''}"   >HIPPO</option>
-	<option value="FP5"     ${flash.FilterInst == 'FP5' ? 'selected="selected="' : ''}"     >FP5</option>
-	<option value="SCD"     ${flash.FilterInst == 'SCD' ? 'selected="selected="' : ''}"     >SCD</option>
-	<option value="FDS"     ${flash.FilterInst == 'FDS' ? 'selected="selected="' : ''}"     >FDS</option>
-	<option value="SPEAR"   ${flash.FilterInst == 'SPEAR' ? 'selected="selected="' : ''}"   >SPEAR</option>
-	<option value="LQD"     ${flash.FilterInst == 'LQD' ? 'selected="selected="' : ''}"     >LQD</option>
-	<option value="ASTERIX" ${flash.FilterInst == 'ASTERIX' ? 'selected="selected="' : ''}" >ASTERIX</option>
-	<option value="PCS"     ${flash.FilterInst == 'PCS' ? 'selected="selected="' : ''}"     >PCS</option>
-	<option value="PHAROS"  ${flash.FilterInst == 'PHAROS' ? 'selected="selected="' : ''}"  >PHAROS</option>
-	<option value="MANAGEMENT"  ${flash.FilterInst == 'MANAGEMENT' ? 'selected="selected="' : ''}"  >Management</option>
-	<option value="SPALLATION"  ${flash.FilterInst == 'SPALLATION' ? 'selected="selected="' : ''}"  >Spallation</option>
+	<option value=""        ${g.cookie(name:"LPS_filter_instr") == '' ? 'selected="selected="' : ''}         >any</option>
+	<option value="NPDF"    ${g.cookie(name:"LPS_filter_instr") == 'NPDF' ? 'selected="selected="' : ''}"    >NPDF</option>
+	<option value="SMARTS"  ${g.cookie(name:"LPS_filter_instr") == 'SMARTS' ? 'selected="selected="' : ''}"  >SMARTS</option>
+	<option value="HIPD"    ${g.cookie(name:"LPS_filter_instr") == 'HIPD' ? 'selected="selected="' : ''}"    >HIPD</option>
+	<option value="HIPPO"   ${g.cookie(name:"LPS_filter_instr") == 'HIPPO' ? 'selected="selected="' : ''}"   >HIPPO</option>
+	<option value="FP5"     ${g.cookie(name:"LPS_filter_instr") == 'FP5' ? 'selected="selected="' : ''}"     >FP5</option>
+	<option value="SCD"     ${g.cookie(name:"LPS_filter_instr") == 'SCD' ? 'selected="selected="' : ''}"     >SCD</option>
+	<option value="FDS"     ${g.cookie(name:"LPS_filter_instr") == 'FDS' ? 'selected="selected="' : ''}"     >FDS</option>
+	<option value="SPEAR"   ${g.cookie(name:"LPS_filter_instr") == 'SPEAR' ? 'selected="selected="' : ''}"   >SPEAR</option>
+	<option value="LQD"     ${g.cookie(name:"LPS_filter_instr") == 'LQD' ? 'selected="selected="' : ''}"     >LQD</option>
+	<option value="ASTERIX" ${g.cookie(name:"LPS_filter_instr") == 'ASTERIX' ? 'selected="selected="' : ''}" >ASTERIX</option>
+	<option value="PCS"     ${g.cookie(name:"LPS_filter_instr") == 'PCS' ? 'selected="selected="' : ''}"     >PCS</option>
+	<option value="PHAROS"  ${g.cookie(name:"LPS_filter_instr") == 'PHAROS' ? 'selected="selected="' : ''}"  >PHAROS</option>
+	<option value="MANAGEMENT"  ${g.cookie(name:"LPS_filter_instr") == 'MANAGEMENT' ? 'selected="selected="' : ''}"  >Management</option>
+	<option value="SPALLATION"  ${g.cookie(name:"LPS_filter_instr") == 'SPALLATION' ? 'selected="selected="' : ''}"  >Spallation</option>
 	</select>
     </g:if>
     <g:else>
 	<select name="FilterInst" id="FilterInst" name="FilterInst" value="${flash.FilterInst}">
-	<option value=""        ${flash.FilterInst == '' ? 'selected="selected="' : ''}         >any</option>
-	<option value="NPDF"    ${flash.FilterInst == 'NPDF' ? 'selected="selected="' : ''}"    >NPDF</option>
-	<option value="SMARTS"  ${flash.FilterInst == 'SMARTS' ? 'selected="selected="' : ''}"  >SMARTS</option>
-	<option value="HIPD"    ${flash.FilterInst == 'HIPD' ? 'selected="selected="' : ''}"    >HIPD</option>
-	<option value="HIPPO"   ${flash.FilterInst == 'HIPPO' ? 'selected="selected="' : ''}"   >HIPPO</option>
-	<option value="FP5"     ${flash.FilterInst == 'FP5' ? 'selected="selected="' : ''}"     >FP5</option>
-	<option value="SCD"     ${flash.FilterInst == 'SCD' ? 'selected="selected="' : ''}"     >SCD</option>
-	<option value="FDS"     ${flash.FilterInst == 'FDS' ? 'selected="selected="' : ''}"     >FDS</option>
-	<option value="SPEAR"   ${flash.FilterInst == 'SPEAR' ? 'selected="selected="' : ''}"   >SPEAR</option>
-	<option value="LQD"     ${flash.FilterInst == 'LQD' ? 'selected="selected="' : ''}"     >LQD</option>
-	<option value="ASTERIX" ${flash.FilterInst == 'ASTERIX' ? 'selected="selected="' : ''}" >ASTERIX</option>
-	<option value="PCS"     ${flash.FilterInst == 'PCS' ? 'selected="selected="' : ''}"     >PCS</option>
-	<option value="PHAROS"  ${flash.FilterInst == 'PHAROS' ? 'selected="selected="' : ''}"  >PHAROS</option>
-	<option value="MANAGEMENT"  ${flash.FilterInst == 'MANAGEMENT' ? 'selected="selected="' : ''}"  >Management</option>
-	<option value="SPALLATION"  ${flash.FilterInst == 'SPALLATION' ? 'selected="selected="' : ''}"  >Spallation</option>
-	<option value="1FP12"   ${flash.FilterInst == '1FP12' ? 'selected="selected="' : ''}"   >1FP12</option>
-	<option value="4FP15R"  ${flash.FilterInst == '4FP15R' ? 'selected="selected="' : ''}"  >4FP15R</option>
-	<option value="DANCE"   ${flash.FilterInst == 'DANCE' ? 'selected="selected="' : ''}"   >DANCE</option>
-	<option value="FIGARO"  ${flash.FilterInst == 'FIGARO' ? 'selected="selected="' : ''}"  >FIGARO</option>
-	<option value="GEANIE"  ${flash.FilterInst == 'GEANIE' ? 'selected="selected="' : ''}"  >GEANIE</option>
-	<option value="WNR"     ${flash.FilterInst == 'WNR' ? 'selected="selected="' : ''}"     >WNR</option>
+	<option value=""        ${g.cookie(name:"LPS_filter_instr") == '' ? 'selected="selected="' : ''}         >any</option>
+	<option value="NPDF"    ${g.cookie(name:"LPS_filter_instr") == 'NPDF' ? 'selected="selected="' : ''}"    >NPDF</option>
+	<option value="SMARTS"  ${g.cookie(name:"LPS_filter_instr") == 'SMARTS' ? 'selected="selected="' : ''}"  >SMARTS</option>
+	<option value="HIPD"    ${g.cookie(name:"LPS_filter_instr") == 'HIPD' ? 'selected="selected="' : ''}"    >HIPD</option>
+	<option value="HIPPO"   ${g.cookie(name:"LPS_filter_instr") == 'HIPPO' ? 'selected="selected="' : ''}"   >HIPPO</option>
+	<option value="FP5"     ${g.cookie(name:"LPS_filter_instr") == 'FP5' ? 'selected="selected="' : ''}"     >FP5</option>
+	<option value="SCD"     ${g.cookie(name:"LPS_filter_instr") == 'SCD' ? 'selected="selected="' : ''}"     >SCD</option>
+	<option value="FDS"     ${g.cookie(name:"LPS_filter_instr") == 'FDS' ? 'selected="selected="' : ''}"     >FDS</option>
+	<option value="SPEAR"   ${g.cookie(name:"LPS_filter_instr") == 'SPEAR' ? 'selected="selected="' : ''}"   >SPEAR</option>
+	<option value="LQD"     ${g.cookie(name:"LPS_filter_instr") == 'LQD' ? 'selected="selected="' : ''}"     >LQD</option>
+	<option value="ASTERIX" ${g.cookie(name:"LPS_filter_instr") == 'ASTERIX' ? 'selected="selected="' : ''}" >ASTERIX</option>
+	<option value="PCS"     ${g.cookie(name:"LPS_filter_instr") == 'PCS' ? 'selected="selected="' : ''}"     >PCS</option>
+	<option value="PHAROS"  ${g.cookie(name:"LPS_filter_instr") == 'PHAROS' ? 'selected="selected="' : ''}"  >PHAROS</option>
+	<option value="MANAGEMENT"  ${g.cookie(name:"LPS_filter_instr") == 'MANAGEMENT' ? 'selected="selected="' : ''}"  >Management</option>
+	<option value="SPALLATION"  ${g.cookie(name:"LPS_filter_instr") == 'SPALLATION' ? 'selected="selected="' : ''}"  >Spallation</option>
+	<option value="1FP12"   ${g.cookie(name:"LPS_filter_instr") == '1FP12' ? 'selected="selected="' : ''}"   >1FP12</option>
+	<option value="4FP15R"  ${g.cookie(name:"LPS_filter_instr") == '4FP15R' ? 'selected="selected="' : ''}"  >4FP15R</option>
+	<option value="DANCE"   ${g.cookie(name:"LPS_filter_instr") == 'DANCE' ? 'selected="selected="' : ''}"   >DANCE</option>
+	<option value="FIGARO"  ${g.cookie(name:"LPS_filter_instr") == 'FIGARO' ? 'selected="selected="' : ''}"  >FIGARO</option>
+	<option value="GEANIE"  ${g.cookie(name:"LPS_filter_instr") == 'GEANIE' ? 'selected="selected="' : ''}"  >GEANIE</option>
+	<option value="WNR"     ${g.cookie(name:"LPS_filter_instr") == 'WNR' ? 'selected="selected="' : ''}"     >WNR</option>
 	</select>
     </g:else>
 </g:else>
