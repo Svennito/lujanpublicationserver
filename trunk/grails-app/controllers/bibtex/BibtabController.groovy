@@ -17,22 +17,18 @@ class BibtabController {
 
     def list() {
 	// SV 120714 Trying filter, following http://kiwigrails.blogspot.com/2008/07/filtering-list.html
-	if (!params.FilterFacility) {
-	  params.FilterFacility = ""
-	}
-	if (!params.FilterName) {
-	  params.FilterName = ""
-	}
-	if (!params.FilterYear) {
-	  params.FilterYear= ""
-	}
-	if (!params.FilterInst) {
-	  params.FilterInst = ""
-	}
-	flash.FilterFacility = params.FilterFacility
-	flash.FilterName = params.FilterName
-	flash.FilterYear = params.FilterYear
-	flash.FilterInst = params.FilterInst
+	// each time we hit the filter button, the values are written to the cookies
+	// if a record was deleted or so, the cookies have the last valid entries
+	// so we can always read the cookies
+	params.FilterFacility	= g.cookie(name:"LPS_filter_facility")
+	params.FilterName	= g.cookie(name:"LPS_filter_name")
+	params.FilterYear	= g.cookie(name:"LPS_filter_year")
+	params.FilterInst	= g.cookie(name:"LPS_filter_instr")
+
+	flash.FilterFacility	= params.FilterFacility
+	flash.FilterName	= params.FilterName
+	flash.FilterYear	= params.FilterYear
+	flash.FilterInst	= params.FilterInst
 	// end
         params.max = Math.min(params.max ? params.int('max') : 10, 100)	
 
@@ -41,10 +37,11 @@ class BibtabController {
 	def criteria = Bibtab.createCriteria()
 	def results
 
-	println "FilterFacility: <"+params.FilterFacility+">"
-	println "FilterName: <"+params.FilterName+">"
-	println "FilterYear: <"+params.FilterYear+">"
-	println "FilterInst: <"+params.FilterInst+">"
+	println "FilterFacility: <"+params.FilterFacility+"> + Cookie: <"+g.cookie(name:"LPS_filter_facility")+"> + flash: <"+flash.FilterFacility+">"
+	println "FilterName: <"+params.FilterName+"> + Cookie: <"+g.cookie(name:"LPS_filter_name")+"> + flash: <"+flash.FilterName+">"
+	println "FilterYear: <"+params.FilterYear+"> + Cookie: <"+g.cookie(name:"LPS_filter_year")+"> + flash: <"+flash.FilterYear+">"
+	println "FilterInst: <"+params.FilterInst+"> + Cookie: <"+g.cookie(name:"LPS_filter_instr")+"> + flash: <"+flash.FilterInst+">"
+	
 	query = {
 	  and {
 	    like("facility", '%'+params.FilterFacility + '%')
