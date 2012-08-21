@@ -72,8 +72,8 @@ class BibtabController {
 		response.contentType = ConfigurationHolder.config.grails.mime.types[params.format]
 		response.setHeader("Content-disposition", "attachment; filename=${params.FilterFacility}_${params.FilterInst}_${params.FilterName}_${params.FilterYear}.${params.extension}")
 		
-		List fields = ["author", "title", "journal"]
-		Map labels = ["author": "Author", "title": "Title", "journal":"Journal"]
+		List fields = ["author", "title", "journal","year","bibtype","instrument","citations"]
+		Map labels = ["author": "Author", "title": "Title", "journal":"Journal", "year":"Year", "bibtype":"Type", "instrument":"Instrument","citations":"Citations"]
 		// Formatter closure
 		def replace_and = { domain, value ->
 			return value.replaceAll(" and ", ", ")
@@ -84,7 +84,7 @@ class BibtabController {
 		}
 
 		Map formatters = [author: replace_and, journal: assemble_cite]		
-		Map parameters = ["column.widths": [0.5, 0.9, 0.5]]
+		Map parameters = ["column.widths": [0.5, 0.9, 0.5, 0.25, 0.25, 0.25, 0.25]]
 		params.max = results.getTotalCount()
 		exportService.export(params.format, response.outputStream, results, fields, labels, formatters, parameters)
 	} 
