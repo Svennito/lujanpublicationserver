@@ -388,8 +388,21 @@ if __name__ == "__main__":
 	  # do we need to add to BiBTeX file?
 	  if options.insert_file != "False":
 	    # yes, we do!
-	    searchstring = item[0:item.find("\n")]
+	    # define a search string
+	    searchstring = item[0:item.find(",\n")]
+	    # modify the first line of the bib entry to make the index more unique
+	    vol    = _get_bib_element(item, "volume")
+	    number = _get_bib_element(item, "number")
+	    pages  = _get_bib_element(item, "pages")
+	    if pages:
+		pages  = pages.replace("--","to")
+
+	    for i in vol, number, pages:
+		if i: 
+		    searchstring = searchstring + "_" + i
 	    logging.debug("Searchstring: %s" % searchstring)
+	    # assemble a new entry with the new first line
+	    item = searchstring + ",\n"+item[item.find("\n")+1:]
 	    # check if the provided BiBTeX file exists
 	    if os.path.isfile(options.insert_file) != True:
 	      # we need to make it
