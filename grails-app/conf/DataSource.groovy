@@ -16,19 +16,19 @@ environments {
         dataSource {
             // dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
             dbCreate = "update"
-            url = "jdbc:mysql://localhost/bibtex?autoreconnect=true"
+            url = "jdbc:mysql://localhost/bibtex?autoReconnect=true"
         }          
     }
     test {
         dataSource {
             dbCreate = "update"
-            url = "jdbc:mysql://localhost/bibtex?autoreconnect=true"
+            url = "jdbc:mysql://localhost/bibtex?autoReconnect=true"
         }
     }
     production {
         dataSource {
             dbCreate = "update"
-            url = "jdbc:mysql://localhost/bibtex?autoreconnect=true"
+            url = "jdbc:mysql://localhost/bibtex?autoReconnect=true"
             pooled = true
             properties {
                maxActive = -1
