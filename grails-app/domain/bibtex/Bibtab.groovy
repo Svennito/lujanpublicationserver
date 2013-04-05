@@ -76,6 +76,14 @@ class Bibtab {
     String facility
     Boolean falsehit
     Boolean primarydata
+    Boolean academia
+    Boolean nationallab
+    Boolean industry
+    Boolean foreign
+    Boolean refereed
+    Boolean high_profile
+    Boolean high_impact
+    Boolean staff_involved
     Date dateCreated
     Date lastUpdated
     String entry
