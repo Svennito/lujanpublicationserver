@@ -86,7 +86,30 @@ class Bibtab {
         title()
         year()
 	// instruments need also be present in bibtosql_sv.awk
-        instrument(inList:["NPDF","SMARTS","HIPD","HIPPO","FP5","SCD","FDS","SPEAR","LQD","ASTERIX","PCS","PHAROS","MANAGEMENT","SPALLATION","1FP12","4FP15R","DANCE","FIGARO","GEANIE","WNR",""])
+	// instrument(inList:["NPDF","SMARTS","HIPD","HIPPO","FP5","SCD","FDS","SPEAR","LQD","ASTERIX","PCS","PHAROS","MANAGEMENT","SPALLATION","1FP12","4FP15R","DANCE","FIGARO","GEANIE","WNR",""])
+	instrument validator: {
+	  // we need to check instrument is not blank and has only entries from the above list
+	  if (!it.length) return 0
+
+	  // length is not 0, let's break words apart and compare with instrument list
+	  instList = ["NPDF","SMARTS","HIPD","HIPPO","FP5","SCD","FDS","SPEAR","LQD","ASTERIX","PCS","PHAROS","MANAGEMENT","SPALLATION","1FP12","4FP15R","DANCE","FIGARO","GEANIE","WNR",""]
+	  String[] fieldList = it.split(" ");
+	  for (i=0;i<fieldList.length;i++) {
+	      if ( !instList.contains(fieldList[i])) {
+		  // found entry that is not in our list! Bail!
+		  return 0
+	      }
+	      // now we know this entry is legal, check for doublets
+	      for (j=i+1;j<fieldList.length;j++) {
+		  if (fieldList[i] == fieldList[j]) {
+		      // we found a doublet! Bail!
+		      return 0
+		  }
+	      }
+	  }
+	  // we tested what we can think of, declare it kosher
+	  return 1
+	}
 	facility(inList:["LUJAN","WNR",""])
         citations(nullable: true, max: 2147483647)
         url(nullable:true)
