@@ -59,7 +59,7 @@ from htmlentitydefs import name2codepoint
 google_id = hashlib.md5(str(random.random())).hexdigest()[:16] 
 
 GOOGLE_SCHOLAR_URL = "http://scholar.google.com"
-HEADERS = {'User-Agent' : 'Mozilla/5.0','Cookie' : 'GSP=ID=%s:CF=4' % google_id }
+#HEADERS = {'User-Agent' : 'Mozilla/5.0','Cookie' : 'GSP=ID=%s:CF=4' % google_id }
 HEADERS = {'User-Agent' : 'Opera/9.80 (X11; Linux i686; U; en) Presto/2.6.30 Version/10.63','Cookie' : 'GSP=ID=%s:CF=4' % google_id }
 
 # valid scholar search string (generated using advanced search):
@@ -122,10 +122,41 @@ def query(searchstr, year_from=False, year_to=False, exact_phrase=False, allresu
       
     logging.debug("String sent to google: %s" % searchstr)
     url = GOOGLE_SCHOLAR_URL + searchstr
-    request = urllib2.Request(url, headers=HEADERS)
-    logging.debug("url: %s" % url)
-    logging.debug("headers: %s" % HEADERS)
-    response = urllib2.urlopen(request)
+
+    # Try to connect a few times, waiting longer after each consecutive failure
+    MAX_ATTEMPTS = 10
+    for attempt in range(MAX_ATTEMPTS):
+        try:
+	    # fake google id (looks like it is a 16 elements hex)
+	    google_id = hashlib.md5(str(random.random())).hexdigest()[:16] 
+	  
+	    # try to confuse google with random user agents, e.g. from http://www.stevestechresource.com/str/instructional/web_browser_useragent_values.html
+	    # confusing doesn't seem to work. What seems to work is to use wireshark and get the full cookie sent by google, the one in the cookie manager is insufficient...
+	    # looks like one needs to enter the cookies from scholar.google.com and google.com as listed in Opera cookie manager after one has identified the little picture
+	    agent = random.randrange(1) 
+	    if agent == 0:
+		HEADERS = {'User-Agent' : 'Opera/9.80 (X11; Linux i686; U; en) Presto/2.10.289 Version/12.02','Cookie' : 'BIGipServerbluecoat_pool=2181370028.36895.0000; GSP=ID=d7531c222b61af10:IN=7e6cc990821af63+3047c38f1bda9f39:CF=4:DT=1:NT=1365177290:S=VxYtrEIY1e_tKffq; MPRF=H4sIAAAAAAAAAKt4175i3Q3VLiaGSUwKhmam5kmGBuZppsnmicYG5iZmxsnGxuaplmlGqQYWBkkTmBkAbNVZqjAAAAA; SS=DQAAAL4AAAD-XDruwu4pI0AwKA6kNxTwqaePBrComcsrEv2YwGfq3RZqbpswnDyBIus7jchEcKVsvHyZWkNPhA_ukTHsGHscEF4-jxsj153OhcwnJ_Do_4FRQKuou7ih6z2a9uPcbUoo7PE-vRVt-XKBPQezIbkIZSunCxBmcKBifR8fbAxknWbe9cTwB05wGJpb1dwb8_en-GyDrMOJDdR-shZDelymhhsmxIamClOmv7GRgWx1MU3ZxYcsjGnGoODDXCItK3g; PREF=ID=d7531c222b61af10:U=53b32425fdf95ceb:FF=0:LD=en:NR=100:TM=1206481493:LM=1355271328:FV=2:GM=1:IG=3:S=O7mIFn_kInevikqr; HSID=Ax9aZIxyX_vMmzWI2; APISID=WZar1cZiLRo74Q69/A0lQVUQ2WxaTgXSLU; NID=67=v-J_Owu2yFYVTxMhZdoDRdhHIJnnh949vJqtt1358nyZ9uBkvodlw1jEST9EX7d33cqmLpmbFjn9-ZBwz6ImFi03cjYmikme6Ie1jZ0WFt4fdp6dtRnVxuNUwrYkwQ3aKA4KHPQRrG415sQUzEXternbEqr_pEXvo04NYdA7KTq6MAnohbP6IEyDl8I-NM1UR8lP_lOIu4rE8wipgJLWI9mJqQ; GDSESS=ID=881c0aa2a8801cca:TM=1365201102:C=c:IP=192.12.184.6-:S=APGng0vi8bchO66WJjM3lAih89nNNqQWcA; SID=DQAAAMwAAABwR3XBxthKKuQRKbbOrszFcw3zm_cCvLsidKUybtJcle1BsIFXQRBh_kYi37J8IwVzargpm5LUQX5GnQjDinMk0PPL0T3zthLYtiS93P_2b90k32XZE8gwJYVP1t6FUwqecyAxVU5UoJrHXFeGNckP1wxUYWCm-ZXCnAcuNDibHpxszUCTfpR8r-Xge4cHjm7XEZUTMYPU5DtN-enNC2k8QgN_f5zGLAFJLnir4UptAdT5VIsyTfA6ZF9tXULTBGEd3wKcnv3Ymj3wC4oU7PeL'}
+		#HEADERS = {'User-Agent' : 'Opera/9.80 (X11; Linux i686; U; en) Presto/2.6.30 Version/10.63','Cookie' : 'GSP=ID=%s:CF=4' % google_id }
+	    elif agent == 1:
+		HEADERS = {'User-Agent' : 'Mozilla/4.0','Cookie' : 'GSP=ID=%s:CF=4' % google_id }
+	    elif agent == 2:
+		HEADERS = {'User-Agent' : 'Mozilla/5.0','Cookie' : 'GSP=ID=%s:CF=4' % google_id }
+	    elif agent == 3:
+		HEADERS = {'User-Agent' : 'Opera 11.50 Beta 1','Cookie' : 'GSP=ID=%s:CF=4' % google_id }
+	    elif agent == 4:
+		HEADERS = {'User-Agent' : 'mozilla/5.0 (windows; u; windows nt 5.1; en-us; rv:1.7.13) gecko/20060414','Cookie' : 'GSP=ID=%s:CF=4' % google_id }
+	    request = urllib2.Request(url, headers=HEADERS)
+	    logging.debug("url: %s" % url)
+	    logging.debug("headers: %s" % HEADERS)
+            response = urllib2.urlopen(request)
+            break
+        except urllib2.URLError, e:
+            sleep_secs = attempt ** 4
+            print >> sys.stderr, 'ERROR: %s.\nRetrying in %s seconds...' % (e, sleep_secs)            
+            time.sleep(sleep_secs)    
+                                                  
+                                                  
+    # response = urllib2.urlopen(request)
     logging.debug("response: %s" % response)
     html = response.read()
     html = html.decode('ascii', 'ignore') 
