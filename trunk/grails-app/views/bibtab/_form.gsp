@@ -31,18 +31,24 @@
 		<g:message code="bibtab.instrument.label" default="Instrument" />
 		
 	</label>
-	<g:select name="instrument" from="${bibtabInstance.constraints.instrument.inList}" value="${bibtabInstance?.instrument}" valueMessagePrefix="bibtab.instrument" noSelection="['': '']"/>
+	<g:textField name="instrument" value="${bibtabInstance?.instrument}"/>
 </div>
 
-<!--
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'facility', 'error')} ">
+	<label for="facility">
+		<g:message code="bibtab.facility.label" default="Facility" />
+		
+	</label>
+	<g:select name="facility" from="${bibtabInstance.constraints.facility.inList}" value="${bibtabInstance?.facility}" valueMessagePrefix="bibtab.facility" noSelection="['': '']"/>
+</div>
+
 <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'citations', 'error')} ">
 	<label for="citations">
 		<g:message code="bibtab.citations.label" default="Citations" />
 		
 	</label>
-	<g:field type="number" name="citations" max="2147483647" value="${bibtabInstance.citations}"/>
+	<g:field name="citations" type="number" max="2147483647" value="${bibtabInstance.citations}"/>
 </div>
--->
 
 <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'url', 'error')} ">
 	<label for="url">
@@ -52,35 +58,37 @@
 	<g:textField name="url" value="${bibtabInstance?.url}"/>
 </div>
 
-<!--
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'citelinks', 'error')} ">
+	<label for="citelinks">
+		<g:message code="bibtab.citelinks.label" default="Citelinks" />
+		
+	</label>
+	<g:textField name="citelinks" value="${bibtabInstance?.citelinks}"/>
+</div>
+
 <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'authorcount', 'error')} ">
 	<label for="authorcount">
 		<g:message code="bibtab.authorcount.label" default="Authorcount" />
 		
 	</label>
-	<g:field type="number" name="authorcount" max="2147483647" value="${bibtabInstance.authorcount}"/>
+	<g:field name="authorcount" type="number" max="2147483647" value="${bibtabInstance.authorcount}"/>
 </div>
--->
 
-<!--
 <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'editorcount', 'error')} ">
 	<label for="editorcount">
 		<g:message code="bibtab.editorcount.label" default="Editorcount" />
 		
 	</label>
-	<g:field type="number" name="editorcount" max="2147483647" value="${bibtabInstance.editorcount}"/>
+	<g:field name="editorcount" type="number" max="2147483647" value="${bibtabInstance.editorcount}"/>
 </div>
--->
 
-<!--
 <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'pagecount', 'error')} ">
 	<label for="pagecount">
 		<g:message code="bibtab.pagecount.label" default="Pagecount" />
 		
 	</label>
-	<g:field type="number" name="pagecount" max="2147483647" value="${bibtabInstance.pagecount}"/>
+	<g:field name="pagecount" type="number" max="2147483647" value="${bibtabInstance.pagecount}"/>
 </div>
--->
 
 <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'bibtype', 'error')} ">
 	<label for="bibtype">
@@ -90,7 +98,6 @@
 	<g:select name="bibtype" from="${bibtabInstance.constraints.bibtype.inList}" value="${bibtabInstance?.bibtype}" valueMessagePrefix="bibtab.bibtype" noSelection="['': '']"/>
 </div>
 
-<!--
 <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'filename', 'error')} ">
 	<label for="filename">
 		<g:message code="bibtab.filename.label" default="Filename" />
@@ -98,7 +105,6 @@
 	</label>
 	<g:textField name="filename" value="${bibtabInstance?.filename}"/>
 </div>
--->
 
 <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'editor', 'error')} ">
 	<label for="editor">
@@ -244,167 +250,165 @@
 	<g:textField name="monthnumber" value="${bibtabInstance?.monthnumber}"/>
 </div>
 
-<!--
-	    <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'coden', 'error')} ">
-		    <label for="coden">
-			    <g:message code="bibtab.coden.label" default="Coden" />
-			    
-		    </label>
-		    <g:textField name="coden" value="${bibtabInstance?.coden}"/>
-	    </div>
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'coden', 'error')} ">
+	<label for="coden">
+		<g:message code="bibtab.coden.label" default="Coden" />
+		
+	</label>
+	<g:textField name="coden" value="${bibtabInstance?.coden}"/>
+</div>
 
-	    <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'doi', 'error')} ">
-		    <label for="doi">
-			    <g:message code="bibtab.doi.label" default="Doi" />
-			    
-		    </label>
-		    <g:textField name="doi" value="${bibtabInstance?.doi}"/>
-	    </div>
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'doi', 'error')} ">
+	<label for="doi">
+		<g:message code="bibtab.doi.label" default="Doi" />
+		
+	</label>
+	<g:textField name="doi" value="${bibtabInstance?.doi}"/>
+</div>
 
-	    <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'isbn', 'error')} ">
-		    <label for="isbn">
-			    <g:message code="bibtab.isbn.label" default="Isbn" />
-			    
-		    </label>
-		    <g:textField name="isbn" value="${bibtabInstance?.isbn}"/>
-	    </div>
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'isbn', 'error')} ">
+	<label for="isbn">
+		<g:message code="bibtab.isbn.label" default="Isbn" />
+		
+	</label>
+	<g:textField name="isbn" value="${bibtabInstance?.isbn}"/>
+</div>
 
-	    <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'isbn13', 'error')} ">
-		    <label for="isbn13">
-			    <g:message code="bibtab.isbn13.label" default="Isbn13" />
-			    
-		    </label>
-		    <g:textField name="isbn13" value="${bibtabInstance?.isbn13}"/>
-	    </div>
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'isbn13', 'error')} ">
+	<label for="isbn13">
+		<g:message code="bibtab.isbn13.label" default="Isbn13" />
+		
+	</label>
+	<g:textField name="isbn13" value="${bibtabInstance?.isbn13}"/>
+</div>
 
-	    <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'issn', 'error')} ">
-		    <label for="issn">
-			    <g:message code="bibtab.issn.label" default="Issn" />
-			    
-		    </label>
-		    <g:textField name="issn" value="${bibtabInstance?.issn}"/>
-	    </div>
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'issn', 'error')} ">
+	<label for="issn">
+		<g:message code="bibtab.issn.label" default="Issn" />
+		
+	</label>
+	<g:textField name="issn" value="${bibtabInstance?.issn}"/>
+</div>
 
-	    <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'lccn', 'error')} ">
-		    <label for="lccn">
-			    <g:message code="bibtab.lccn.label" default="Lccn" />
-			    
-		    </label>
-		    <g:textField name="lccn" value="${bibtabInstance?.lccn}"/>
-	    </div>
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'lccn', 'error')} ">
+	<label for="lccn">
+		<g:message code="bibtab.lccn.label" default="Lccn" />
+		
+	</label>
+	<g:textField name="lccn" value="${bibtabInstance?.lccn}"/>
+</div>
 
-	    <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'mrclass', 'error')} ">
-		    <label for="mrclass">
-			    <g:message code="bibtab.mrclass.label" default="Mrclass" />
-			    
-		    </label>
-		    <g:textField name="mrclass" value="${bibtabInstance?.mrclass}"/>
-	    </div>
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'mrclass', 'error')} ">
+	<label for="mrclass">
+		<g:message code="bibtab.mrclass.label" default="Mrclass" />
+		
+	</label>
+	<g:textField name="mrclass" value="${bibtabInstance?.mrclass}"/>
+</div>
 
-	    <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'mrnumber', 'error')} ">
-		    <label for="mrnumber">
-			    <g:message code="bibtab.mrnumber.label" default="Mrnumber" />
-			    
-		    </label>
-		    <g:textField name="mrnumber" value="${bibtabInstance?.mrnumber}"/>
-	    </div>
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'mrnumber', 'error')} ">
+	<label for="mrnumber">
+		<g:message code="bibtab.mrnumber.label" default="Mrnumber" />
+		
+	</label>
+	<g:textField name="mrnumber" value="${bibtabInstance?.mrnumber}"/>
+</div>
 
-	    <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'mrreviewer', 'error')} ">
-		    <label for="mrreviewer">
-			    <g:message code="bibtab.mrreviewer.label" default="Mrreviewer" />
-			    
-		    </label>
-		    <g:textField name="mrreviewer" value="${bibtabInstance?.mrreviewer}"/>
-	    </div>
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'mrreviewer', 'error')} ">
+	<label for="mrreviewer">
+		<g:message code="bibtab.mrreviewer.label" default="Mrreviewer" />
+		
+	</label>
+	<g:textField name="mrreviewer" value="${bibtabInstance?.mrreviewer}"/>
+</div>
 
-	    <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'bibdate', 'error')} ">
-		    <label for="bibdate">
-			    <g:message code="bibtab.bibdate.label" default="Bibdate" />
-			    
-		    </label>
-		    <g:textField name="bibdate" value="${bibtabInstance?.bibdate}"/>
-	    </div>
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'bibdate', 'error')} ">
+	<label for="bibdate">
+		<g:message code="bibtab.bibdate.label" default="Bibdate" />
+		
+	</label>
+	<g:textField name="bibdate" value="${bibtabInstance?.bibdate}"/>
+</div>
 
-	    <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'bibsource', 'error')} ">
-		    <label for="bibsource">
-			    <g:message code="bibtab.bibsource.label" default="Bibsource" />
-			    
-		    </label>
-		    <g:textField name="bibsource" value="${bibtabInstance?.bibsource}"/>
-	    </div>
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'bibsource', 'error')} ">
+	<label for="bibsource">
+		<g:message code="bibtab.bibsource.label" default="Bibsource" />
+		
+	</label>
+	<g:textField name="bibsource" value="${bibtabInstance?.bibsource}"/>
+</div>
 
-	    <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'bibtimestamp', 'error')} ">
-		    <label for="bibtimestamp">
-			    <g:message code="bibtab.bibtimestamp.label" default="Bibtimestamp" />
-			    
-		    </label>
-		    <g:textField name="bibtimestamp" value="${bibtabInstance?.bibtimestamp}"/>
-	    </div>
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'bibtimestamp', 'error')} ">
+	<label for="bibtimestamp">
+		<g:message code="bibtab.bibtimestamp.label" default="Bibtimestamp" />
+		
+	</label>
+	<g:textField name="bibtimestamp" value="${bibtabInstance?.bibtimestamp}"/>
+</div>
 
-	    <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'note', 'error')} ">
-		    <label for="note">
-			    <g:message code="bibtab.note.label" default="Note" />
-			    
-		    </label>
-		    <g:textField name="note" value="${bibtabInstance?.note}"/>
-	    </div>
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'note', 'error')} ">
+	<label for="note">
+		<g:message code="bibtab.note.label" default="Note" />
+		
+	</label>
+	<g:textField name="note" value="${bibtabInstance?.note}"/>
+</div>
 
-	    <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'series', 'error')} ">
-		    <label for="series">
-			    <g:message code="bibtab.series.label" default="Series" />
-			    
-		    </label>
-		    <g:textField name="series" value="${bibtabInstance?.series}"/>
-	    </div>
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'series', 'error')} ">
+	<label for="series">
+		<g:message code="bibtab.series.label" default="Series" />
+		
+	</label>
+	<g:textField name="series" value="${bibtabInstance?.series}"/>
+</div>
 
-	    <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'keywords', 'error')} ">
-		    <label for="keywords">
-			    <g:message code="bibtab.keywords.label" default="Keywords" />
-			    
-		    </label>
-		    <g:textField name="keywords" value="${bibtabInstance?.keywords}"/>
-	    </div>
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'keywords', 'error')} ">
+	<label for="keywords">
+		<g:message code="bibtab.keywords.label" default="Keywords" />
+		
+	</label>
+	<g:textField name="keywords" value="${bibtabInstance?.keywords}"/>
+</div>
 
-	    <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'remark', 'error')} ">
-		    <label for="remark">
-			    <g:message code="bibtab.remark.label" default="Remark" />
-			    
-		    </label>
-		    <g:textField name="remark" value="${bibtabInstance?.remark}"/>
-	    </div>
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'remark', 'error')} ">
+	<label for="remark">
+		<g:message code="bibtab.remark.label" default="Remark" />
+		
+	</label>
+	<g:textField name="remark" value="${bibtabInstance?.remark}"/>
+</div>
 
-	    <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'subject', 'error')} ">
-		    <label for="subject">
-			    <g:message code="bibtab.subject.label" default="Subject" />
-			    
-		    </label>
-		    <g:textField name="subject" value="${bibtabInstance?.subject}"/>
-	    </div>
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'subject', 'error')} ">
+	<label for="subject">
+		<g:message code="bibtab.subject.label" default="Subject" />
+		
+	</label>
+	<g:textField name="subject" value="${bibtabInstance?.subject}"/>
+</div>
 
-	    <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'toc', 'error')} ">
-		    <label for="toc">
-			    <g:message code="bibtab.toc.label" default="Toc" />
-			    
-		    </label>
-		    <g:textField name="toc" value="${bibtabInstance?.toc}"/>
-	    </div>
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'toc', 'error')} ">
+	<label for="toc">
+		<g:message code="bibtab.toc.label" default="Toc" />
+		
+	</label>
+	<g:textField name="toc" value="${bibtabInstance?.toc}"/>
+</div>
 
-	    <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'zmnumber', 'error')} ">
-		    <label for="zmnumber">
-			    <g:message code="bibtab.zmnumber.label" default="Zmnumber" />
-			    
-		    </label>
-		    <g:textField name="zmnumber" value="${bibtabInstance?.zmnumber}"/>
-	    </div>
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'zmnumber', 'error')} ">
+	<label for="zmnumber">
+		<g:message code="bibtab.zmnumber.label" default="Zmnumber" />
+		
+	</label>
+	<g:textField name="zmnumber" value="${bibtabInstance?.zmnumber}"/>
+</div>
 
-	    <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'query', 'error')} ">
-		    <label for="query">
-			    <g:message code="bibtab.query.label" default="Query" />
-			    
-		    </label>
-		    <g:textField name="query" value="${bibtabInstance?.query}"/>
-	    </div>
--->
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'query', 'error')} ">
+	<label for="query">
+		<g:message code="bibtab.query.label" default="Query" />
+		
+	</label>
+	<g:textField name="query" value="${bibtabInstance?.query}"/>
+</div>
 
 <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'falsehit', 'error')} ">
 	<label for="falsehit">
@@ -422,7 +426,6 @@
 	<g:checkBox name="primarydata" value="${bibtabInstance?.primarydata}" />
 </div>
 
-<!--
 <div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'entry', 'error')} required">
 	<label for="entry">
 		<g:message code="bibtab.entry.label" default="Entry" />
@@ -430,4 +433,68 @@
 	</label>
 	<g:textField name="entry" required="" value="${bibtabInstance?.entry}"/>
 </div>
--->
+
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'academia', 'error')} ">
+	<label for="academia">
+		<g:message code="bibtab.academia.label" default="Academia" />
+		
+	</label>
+	<g:checkBox name="academia" value="${bibtabInstance?.academia}" />
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'high_impact', 'error')} ">
+	<label for="high_impact">
+		<g:message code="bibtab.high_impact.label" default="Highimpact" />
+		
+	</label>
+	<g:checkBox name="high_impact" value="${bibtabInstance?.high_impact}" />
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'high_profile', 'error')} ">
+	<label for="high_profile">
+		<g:message code="bibtab.high_profile.label" default="Highprofile" />
+		
+	</label>
+	<g:checkBox name="high_profile" value="${bibtabInstance?.high_profile}" />
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'industry', 'error')} ">
+	<label for="industry">
+		<g:message code="bibtab.industry.label" default="Industry" />
+		
+	</label>
+	<g:checkBox name="industry" value="${bibtabInstance?.industry}" />
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'lc_staff', 'error')} ">
+	<label for="lc_staff">
+		<g:message code="bibtab.lc_staff.label" default="Lcstaff" />
+		
+	</label>
+	<g:checkBox name="lc_staff" value="${bibtabInstance?.lc_staff}" />
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'nationallab', 'error')} ">
+	<label for="nationallab">
+		<g:message code="bibtab.nationallab.label" default="Nationallab" />
+		
+	</label>
+	<g:checkBox name="nationallab" value="${bibtabInstance?.nationallab}" />
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'non_us', 'error')} ">
+	<label for="non_us">
+		<g:message code="bibtab.non_us.label" default="Nonus" />
+		
+	</label>
+	<g:checkBox name="non_us" value="${bibtabInstance?.non_us}" />
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: bibtabInstance, field: 'refereed', 'error')} ">
+	<label for="refereed">
+		<g:message code="bibtab.refereed.label" default="Refereed" />
+		
+	</label>
+	<g:checkBox name="refereed" value="${bibtabInstance?.refereed}" />
+</div>
+

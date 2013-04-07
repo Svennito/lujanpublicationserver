@@ -973,7 +973,9 @@ function do_entry(    month_number,page_count)
     print "\tDOI, ISBN, ISBN13, ISSN, LCCN, MRclass, MRnumber, MRreviewer,"
     print "\tbibdate, bibsource, bibtimestamp, note, series, URL, abstract,"
 #SV 120707 adding extra fields
-    print "\tkeywords, remark, subject, TOC, ZMnumber, citations, citelinks, query, instrument, facility, falsehit, primarydata, date_created, last_updated, entry)"
+    print "\tkeywords, remark, subject, TOC, ZMnumber, citations, citelinks, query, instrument, facility, falsehit, primarydata, date_created, last_updated, entry,"
+# SV130406 adding new boolean fields
+    print "\tacademia,nationallab,industry,non_us,refereed,high_profile,high_impact,lc_staff)"
     print "\tVALUES ("
     printf("\t%s,\n", get_namecount(get_value(Author)))
     printf("\t%s,\n", get_namecount(get_value(Editor)))
@@ -1030,16 +1032,43 @@ function do_entry(    month_number,page_count)
     printf("\t%s,\n", protect(instrument))
     printf("\t%s,\n", protect(facility))
     printf("\t%s,\n", protect(get_value(falseHit)))
-    printf("\t%s,\n", protect(get_value(primaryData)))
+    printf("\tfalse,\n")
     printf("\t%s,\n", protect(get_value(dateCreated)))
     printf("\t%s,\n", protect(get_value(lastUpdated)))
 #SV120707 done
+#SV130406 adding new boolean fields
+    printf("\tfalse,\n")
+    printf("\tfalse,\n")
+    printf("\tfalse,\n")
+    printf("\tfalse,\n")
+    printf("\tfalse,\n")
+    printf("\tfalse,\n")
+    printf("\tfalse,\n")
+    printf("\tfalse,\n")
+#SV130406 done
     printf("\t%s\n",  protect("\n" Entry))
 #    print ");\n"	#SV120707 don't need semicolon yet
 #SV120707 add ON DUPLICATE KEY UPDATE clause to update in case the key already exists
-    printf("\t) ON DUPLICATE KEY UPDATE citations=%s,citelinks=%s;\n\n", protect(get_value(citations)), protect(get_value(citelinks)))
+#     printf("\t) ON DUPLICATE KEY UPDATE citations=%s,citelinks=%s;\n\n", protect(get_value(citations)), protect(get_value(citelinks)))
 #SV120707 done
+#SV130406 Add code that checks if the current instrument is already in the instrument field and adds it if not
+    printf("\t) ON DUPLICATE KEY UPDATE citations=%s,citelinks=%s,\n",protect(get_value(citations)), protect(get_value(citelinks)))
+    printf("\t\t instrument= (SELECT IF(\n")
+    printf("\t\t                      EXISTS( SELECT d.instrument from (select * from bibtab) d where d.id=%s AND d.instrument LIKE '%%%s%%'),\n",protect(get_value(Label)),get_value(instrument))
+    printf("\t\t\t                      (SELECT d.instrument from (select * from bibtab) d where d.id=%s),\n",protect(get_value(Label)))
+    printf("\t\t\t                      (CONCAT( (SELECT d.instrument from (select * from bibtab) d where d.id=%s),' %s'))));\n\n",protect(get_value(Label)),get_value(instrument),get_value(instrument))
 
+# select instrument from bibtab where id='hurd2003lujan_14_1_16to18' AND instrument LIKE '%NPDF%';
+# update bibtab SET instrument=CONCAT(instrument, " ", "HIPPO") where id='hurd2003lujan_14_1_16to18';
+# IF (
+#   EXISTS ( 
+#       select instrument from bibtab where id='hurd2003lujan_14_1_16to18' AND instrument LIKE '%HIPPO%'
+#   ), 
+#   update bibtab SET instrument=CONCAT(instrument, ' ', 'HIPPO') where id='hurd2003lujan_14_1_16to18', 
+#   'we're fine'
+# );
+
+#SV130406 done
     do_names(get_value(Author))
     do_names(get_value(Editor))
 }
@@ -1476,11 +1505,11 @@ function initialize(    k)
 	print "\tacademia     BOOLEAN,"
 	print "\tnationallab  BOOLEAN,"
 	print "\tindustry     BOOLEAN,"
-	print "\tforeign      BOOLEAN,"
+	print "\tnon_us       BOOLEAN,"
 	print "\trefereed     BOOLEAN,"
 	print "\thigh_profile BOOLEAN,"
 	print "\thigh_impact  BOOLEAN,"
-	print "\tstaff_involved BOOLEAN,"
+	print "\tlc_staff     BOOLEAN,"
 	print "\tdate_created  DATE,"
 	print "\tlast_updated  DATE,"
 #SV 120707 end

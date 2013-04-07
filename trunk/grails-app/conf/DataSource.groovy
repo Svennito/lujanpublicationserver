@@ -1,5 +1,18 @@
 dataSource {
-    pooled = true
+   pooled = true
+   properties {
+        maxActive = 5
+        maxIdle = 5
+        minIdle = 3
+        initialSize = 5
+        minEvictableIdleTimeMillis = 6000
+        timeBetweenEvictionRunsMillis = 6000
+        maxWait = 1000
+        testOnBorrow = true
+        testWhileIdle = true
+        testOnReturn = false
+        validationQuery = "select 1;"
+    }
     driverClassName = "com.mysql.jdbc.Driver"
     username = "bibtex"
     password = "bibtex"
