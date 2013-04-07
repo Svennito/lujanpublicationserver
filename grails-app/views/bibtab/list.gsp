@@ -27,11 +27,10 @@
 		    setCookie("LPS_filter_instr",document.filter.FilterInst.value,365)
 		  }
 		  // save filter values also to flash memory
-		  flash.FilterFacility 	= document.filter.FilterFacility.value
-		  flash.FilterName	= document.filter.FilterName.value
-		  flash.FilterYear	= document.filter.FilterYear.value
-		  flash.FilterInst	= document.filter.FilterInst.value
-
+// 		  document.flash.FilterFacility 	= document.filter.FilterFacility.value
+// 		  document.flash.FilterName	= document.filter.FilterName.value
+// 		  document.flash.FilterYear	= document.filter.FilterYear.value
+// 		  document.flash.FilterInst	= document.filter.FilterInst.value
 		</script>
 	</head>
 	<body>
@@ -152,7 +151,7 @@
 						    </td>
 						    <td valign='top' class='button'>
 <!-- 						      <span class="button"><input class="save" type="submit" value="Filter" onClick="SaveFilter("${flash.FilterFacility}","${flash.FilterInst}","${flash.FilterName}","${flash.FilterYear}")"/></span> -->
-						      <span class="button"><input class="save" type="submit" value="Filter" onClick="saveFilter()"/></span> 
+						      <span class="button"><input class="save" type="submit" value="Filter" onClick="saveFilter();${flash.offset=0}"/></span> 
 						    </td>
 						    <td>
 						      ${bibtabInstanceList.getTotalCount()} items
@@ -165,26 +164,32 @@
 			</div>
 		
 <!-- end -->
+			<div class="pagination">
+<!--				<g:paginate total="${bibtabInstanceList.getTotalCount()}" params="${flash}"/> -->
+				<g:paginate total="${bibtabInstanceList.getTotalCount()}"/>
+			</div>
+			<br>
 			<table>
 				<thead>
 					<tr>
 					
-						<g:sortableColumn property="author" title="${message(code: 'bibtab.author.label', default: 'Author')}"  params="${flash}"/>
+						<g:sortableColumn property="author" action="sort_clicked" title="${message(code: 'bibtab.author.label', default: 'Author')}" />
 					
-						<g:sortableColumn property="title" title="${message(code: 'bibtab.title.label', default: 'Title')}"  params="${flash}"/>
+						<g:sortableColumn property="title" action="sort_clicked" title="${message(code: 'bibtab.title.label', default: 'Title')}" />
 					
-						<g:sortableColumn property="year" title="${message(code: 'bibtab.year.label', default: 'Year')}"  params="${flash}"/>
+						<g:sortableColumn property="year" action="sort_clicked" title="${message(code: 'bibtab.year.label', default: 'Year')}" />
 					
-						<g:sortableColumn property="journal" title="${message(code: 'bibtab.year.label', default: 'Journal')}"  params="${flash}"/>
+						<g:sortableColumn property="journal" action="sort_clicked" title="${message(code: 'bibtab.year.label', default: 'Journal')}" />
 
-						<g:sortableColumn property="bibtype" title="${message(code: 'bibtab.year.label', default: 'Type')}"  params="${flash}"/>
+
+						<g:sortableColumn property="bibtype" action="sort_clicked" title="${message(code: 'bibtab.year.label', default: 'Type')}" />
 					
-						<g:sortableColumn property="instrument" title="${message(code: 'bibtab.instrument.label', default: 'Instrument')}"  params="${flash}"/>
+						<g:sortableColumn property="instrument" action="sort_clicked" title="${message(code: 'bibtab.instrument.label', default: 'Instrument')}" />
 					
 					<!-- SV 120708 Make Citations into "Cited"
 						<g:sortableColumn property="citations" title="${message(code: 'bibtab.citations.label', default: 'Citations')}" />
 					-->
-						<g:sortableColumn property="citations" title="Cited"  defaultOrder="desc" params="${flash}"/>
+						<g:sortableColumn property="citations" action="sort_clicked" title="Cited"  defaultOrder="desc"/>
 					
 					</tr>
 				</thead>
@@ -208,12 +213,14 @@
 					
 						<td><a href="${fieldValue(bean: bibtabInstance, field: "citelinks")}" target="_blank" >${fieldValue(bean: bibtabInstance, field: "citations")}</a></td>
 
+
 					</tr>
 				</g:each>
 				</tbody>
 			</table>
 			<div class="pagination">
-				<g:paginate total="${bibtabInstanceList.getTotalCount()}" params="${flash}"/>
+<!--				<g:paginate total="${bibtabInstanceList.getTotalCount()}" params="${flash}"/> -->
+				<g:paginate total="${bibtabInstanceList.getTotalCount()}"/>
 			</div>
 		</div>
 <!-- SV120713 Adding export options using jasper
@@ -251,3 +258,4 @@
 		</div>
 	</body>
 </html>
+
