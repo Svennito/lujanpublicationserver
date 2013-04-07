@@ -973,9 +973,9 @@ function do_entry(    month_number,page_count)
     print "\tDOI, ISBN, ISBN13, ISSN, LCCN, MRclass, MRnumber, MRreviewer,"
     print "\tbibdate, bibsource, bibtimestamp, note, series, URL, abstract,"
 #SV 120707 adding extra fields
-    print "\tkeywords, remark, subject, TOC, ZMnumber, citations, citelinks, query, instrument, facility, falsehit, primarydata, date_created, last_updated, entry,"
+    print "\tkeywords, remark, subject, TOC, ZMnumber, citations, citelinks, query, instrument, facility, falsehit, primarydata, date_created, last_updated, "
 # SV130406 adding new boolean fields
-    print "\tacademia,nationallab,industry,non_us,refereed,high_profile,high_impact,lc_staff)"
+    print "\tacademia,nationallab,industry,non_us,refereed,high_profile,high_impact,lc_staff,entry)"
     print "\tVALUES ("
     printf("\t%s,\n", get_namecount(get_value(Author)))
     printf("\t%s,\n", get_namecount(get_value(Editor)))
