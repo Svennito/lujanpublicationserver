@@ -96,8 +96,16 @@ class Bibtab {
 	// instruments need also be present in bibtosql_sv.awk
 	// instrument(inList:["NPDF","SMARTS","HIPD","HIPPO","FP5","SCD","FDS","SPEAR","LQD","ASTERIX","PCS","PHAROS","MANAGEMENT","SPALLATION","1FP12","4FP15R","DANCE","FIGARO","GEANIE","WNR",""])
 	instrument validator: {
-	  // we need to check instrument is not blank and has only entries from the above list
-	  if (!it.length()) return false
+	  println "Validation of instrument field <"+it+">"
+	  // we need to check instrument has only entries from the above list
+	  // instument can be blank if LANSCE author worked on other stuff
+	  // if (!it.length()) return false
+
+	  // if instument is empty (not result of a instument query), then we're cool
+	  if (it=="False") {
+	      println "No instrument, that's ok..."
+	      return true
+	  }
 
 	  // length is not 0, let's break words apart and compare with instrument list
 	  String[] instList = ["NPDF","SMARTS","HIPD","HIPPO","FP5","SCD","FDS","SPEAR","LQD","ASTERIX","PCS","PHAROS","MANAGEMENT","SPALLATION","1FP12","4FP15R","DANCE","FIGARO","GEANIE","WNR",""]
