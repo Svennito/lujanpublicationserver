@@ -84,8 +84,8 @@ class Bibtab {
     Boolean high_profile
     Boolean high_impact
     Boolean lc_staff
-    Date dateCreated
-    Date lastUpdated
+    Date    dateCreated
+    Date    lastUpdated
     String entry
 
     static constraints = {
