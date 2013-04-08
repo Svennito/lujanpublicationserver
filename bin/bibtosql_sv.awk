@@ -1033,8 +1033,8 @@ function do_entry(    month_number,page_count)
     printf("\t%s,\n", protect(facility))
     printf("\t%s,\n", protect(get_value(falseHit)))
     printf("\tfalse,\n")
-    printf("\t%s,\n", protect(get_value(dateCreated)))
-    printf("\t%s,\n", protect(get_value(lastUpdated)))
+    printf("\t%s,\n", protect(strftime("%Y-%m-%d %H:%M:%S")))
+    printf("\t%s,\n", protect(strftime("%Y-%m-%d %H:%M:%S")))
 #SV120707 done
 #SV130406 adding new boolean fields
     printf("\tfalse,\n")
@@ -1052,8 +1052,11 @@ function do_entry(    month_number,page_count)
 #     printf("\t) ON DUPLICATE KEY UPDATE citations=%s,citelinks=%s;\n\n", protect(get_value(citations)), protect(get_value(citelinks)))
 #SV120707 done
 #SV130406 Add code that checks if the current instrument is already in the instrument field and adds it if not
-    printf("\t) ON DUPLICATE KEY UPDATE citations=%s,citelinks=%s,\n",protect(get_value(citations)), protect(get_value(citelinks)))
-    printf("\t\t instrument= (SELECT IF(\n")
+    printf("\t) ON DUPLICATE KEY UPDATE\n")
+    printf("\t\tcitations=%s,\n",protect(get_value(citations)))
+    printf("\t\tcitelinks=%s,\n", protect(get_value(citelinks)))
+    printf("\t\tlast_updated=%s,\n", protect(strftime("%Y-%m-%d %H:%M:%S")))
+    printf("\t\tinstrument= (SELECT IF(\n")
     printf("\t\t                      EXISTS( SELECT d.instrument from (select * from bibtab) d where d.id=%s AND d.instrument LIKE '%%%s%%'),\n",protect(get_value(Label)),get_value(instrument))
     printf("\t\t\t                      (SELECT d.instrument from (select * from bibtab) d where d.id=%s),\n",protect(get_value(Label)))
     printf("\t\t\t                      (CONCAT( (SELECT d.instrument from (select * from bibtab) d where d.id=%s),' %s'))));\n\n",protect(get_value(Label)),get_value(instrument),get_value(instrument))
@@ -1510,8 +1513,8 @@ function initialize(    k)
 	print "\thigh_profile BOOLEAN,"
 	print "\thigh_impact  BOOLEAN,"
 	print "\tlc_staff     BOOLEAN,"
-	print "\tdate_created  DATE,"
-	print "\tlast_updated  DATE,"
+	print "\tdate_created  DATETIME,"
+	print "\tlast_updated  DATETIME,"
 #SV 120707 end
 	print "\tentry        " TEXT " NOT NULL " UNIQUE
 	print ");\n"

@@ -419,14 +419,7 @@
 					<span class="property-value" aria-labelledby="zmnumber-label"><g:fieldValue bean="${bibtabInstance}" field="zmnumber"/></span>
 				</li>
 				</g:if>
-			
-				<g:if test="${bibtabInstance?.query}">
-				<li class="fieldcontain">
-					<span id="query-label" class="property-label"><g:message code="bibtab.query.label" default="Query" /></span>
-					<span class="property-value" aria-labelledby="query-label"><g:fieldValue bean="${bibtabInstance}" field="query"/></span>
-				</li>
-				</g:if>
-			
+						
 				<g:if test="${bibtabInstance?.falsehit}">
 				<li class="fieldcontain">
 					<span id="falsehit-label" class="property-label"><g:message code="bibtab.falsehit.label" default="Falsehit" /></span>
@@ -438,19 +431,18 @@
 				<li class="fieldcontain">
 					<span id="dateCreated-label" class="property-label"><g:message code="bibtab.dateCreated.label" default="Date Created" /></span>
 					<span class="property-value" aria-labelledby="dateCreated-label"><g:formatDate date="${bibtabInstance?.dateCreated}" /></span>
-				</li>
-				</g:if>
-			
-				<g:if test="${bibtabInstance?.lastUpdated}">
-				<li class="fieldcontain">
+
 					<span id="lastUpdated-label" class="property-label"><g:message code="bibtab.lastUpdated.label" default="Last Updated" /></span>
 					<span class="property-value" aria-labelledby="lastUpdated-label"><g:formatDate date="${bibtabInstance?.lastUpdated}" /></span>
+
+					<span id="query-label" class="property-label"><g:message code="bibtab.query.label" default="Query" /></span>
+					<span class="property-value" aria-labelledby="query-label"><g:fieldValue bean="${bibtabInstance}" field="query"/></span>
 				</li>
 				</g:if>
 			
 				<g:if test="${bibtabInstance?.entry}">
 				<li class="fieldcontain">
-					<span id="entry-label" class="property-label"><g:message code="bibtab.entry.label" default="Entry" /></span>
+					<span id="entry-label" class="property-label"><g:message code="bibtab.entry.label" default="BibTeX Entry" /></span>
 					<span class="property-value" aria-labelledby="entry-label"><g:fieldValue bean="${bibtabInstance}" field="entry"/></span>
 				</li>
 				</g:if>
