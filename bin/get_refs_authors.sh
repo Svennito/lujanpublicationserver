@@ -1,4 +1,4 @@
-for year in {2006..2013}; do
+for year in {2013..2013}; do
   ./get_refs_author.sh "S*Vogel" $year HIPPO LUJAN
   ./get_refs_author.sh "J*Zhang" $year HIPPO LUJAN
   ./get_refs_author.sh "H*Xu" $year HIPPO LUJAN
