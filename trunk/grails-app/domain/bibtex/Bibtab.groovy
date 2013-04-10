@@ -108,7 +108,7 @@ class Bibtab {
 	  }
 
 	  // length is not 0, let's break words apart and compare with instrument list
-	  String[] instList = ["NPDF","SMARTS","HIPD","HIPPO","FP5","SCD","FDS","SPEAR","LQD","ASTERIX","PCS","PHAROS","MANAGEMENT","SPALLATION","1FP12","4FP15R","DANCE","FIGARO","GEANIE","WNR",""]
+	  String[] instList = ["NPDF","SMARTS","HIPD","HIPPO","FP5","SCD","FDS","SPEAR","LQD","ASTERIX","PCS","PHAROS","MANAGEMENT","SPALLATION","1FP12","4FP15R","DANCE","FIGARO","GEANIE","WNR","","False"]
 	  String[] fieldList = it.split(" ");
 	  for (Integer i=0;i<fieldList.length;i++) {
 	      if ( !instList.contains(fieldList[i])) {
@@ -133,7 +133,7 @@ class Bibtab {
         authorcount(nullable: true, max: 2147483647)
         editorcount(nullable: true, max: 2147483647)
         pagecount(nullable: true, max: 2147483647)
-        bibtype(inList:["article","inproceedings","phdthesis","book","techreport","misc"])
+        bibtype(inList:["article","inproceedings","phdthesis","book","techreport","misc","incollection"])
         filename(nullable:true)
         editor(nullable:true)
         booktitle(nullable:true)
