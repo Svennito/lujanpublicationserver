@@ -35,7 +35,7 @@ done
 
 # special cases for those who left or came later, add a year after departure for publication lag
 # folks who retired didn't do much afterwards and may stay in the upper, complete loop
-for year in {2000..2011}; do
+for year in {2000..2012}; do
   ./get_refs_author.sh "Y*Zhao" $year HIPPO LUJAN
   ./get_refs_author.sh "T*Proffen" $year NPDF LUJAN
   ./get_refs_author.sh "B*Schoenborn" $year PCS LUJAN
