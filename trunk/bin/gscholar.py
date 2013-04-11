@@ -123,90 +123,112 @@ def query(searchstr, year_from=False, year_to=False, exact_phrase=False, allresu
     logging.debug("String sent to google: %s" % searchstr)
     url = GOOGLE_SCHOLAR_URL + searchstr
 
-    # Try to connect a few times, waiting longer after each consecutive failure
-    MAX_ATTEMPTS = 10
-    for attempt in range(MAX_ATTEMPTS):
-        try:
-	    # fake google id (looks like it is a 16 elements hex)
-	    google_id = hashlib.md5(str(random.random())).hexdigest()[:16] 
-	  
-	    # try to confuse google with random user agents, e.g. from http://www.stevestechresource.com/str/instructional/web_browser_useragent_values.html
-	    # confusing doesn't seem to work. What seems to work is to use wireshark and get the full cookie sent by google, the one in the cookie manager is insufficient...
-	    # looks like one needs to enter the cookies from scholar.google.com and google.com as listed in Opera cookie manager after one has identified the little picture
-	    agent = random.randrange(1) 
-	    if agent == 0:
-		HEADERS = {'User-Agent' : 'Opera/9.80 (X11; Linux i686; U; en) Presto/2.10.289 Version/12.02','Cookie' : 'BIGipServerbluecoat_pool=2248478892.36895.0000; GSP=ID=d7531c222b61af10:IN=7e6cc990821af63+3047c38f1bda9f39:CF=4:DT=1:NT=1365540270:S=RNz8OZOjnTe-LFtA; MPRF=H4sIAAAAAAAAAKt4175i3Q3VLiaGSUwKhmam5kmGBuZppsnmicYG5iZmxsnGxuaplmlGqQYWBkkTmBkAbNVZqjAAAAA; SS=DQAAAL4AAAD-XDruwu4pI0AwKA6kNxTwqaePBrComcsrEv2YwGfq3RZqbpswnDyBIus7jchEcKVsvHyZWkNPhA_ukTHsGHscEF4-jxsj153OhcwnJ_Do_4FRQKuou7ih6z2a9uPcbUoo7PE-vRVt-XKBPQezIbkIZSunCxBmcKBifR8fbAxknWbe9cTwB05wGJpb1dwb8_en-GyDrMOJDdR-shZDelymhhsmxIamClOmv7GRgWx1MU3ZxYcsjGnGoODDXCItK3g; PREF=ID=d7531c222b61af10:U=53b32425fdf95ceb:FF=0:LD=en:NR=100:TM=1206481493:LM=1355271328:FV=2:GM=1:IG=3:S=O7mIFn_kInevikqr; HSID=Ax9aZIxyX_vMmzWI2; APISID=WZar1cZiLRo74Q69/A0lQVUQ2WxaTgXSLU; NID=67=v-J_Owu2yFYVTxMhZdoDRdhHIJnnh949vJqtt1358nyZ9uBkvodlw1jEST9EX7d33cqmLpmbFjn9-ZBwz6ImFi03cjYmikme6Ie1jZ0WFt4fdp6dtRnVxuNUwrYkwQ3aKA4KHPQRrG415sQUzEXternbEqr_pEXvo04NYdA7KTq6MAnohbP6IEyDl8I-NM1UR8lP_lOIu4rE8wipgJLWI9mJqQ; GDSESS=ID=c8414aa65f561eb3:TM=1365540266:C=c:IP=192.12.184.7-:S=APGng0slWIivZnLftrCbLGCna7GqtR8a_g; SID=DQAAAMwAAABwR3XBxthKKuQRKbbOrszF92IJppFNh075BhK3bbtzQVJ3Hy_IbGqjLQHd-80ZGPADBLoHW3UCYNlILVlhnK--3n1oh9IwHgTXPPcwJiMbd18W4swC2r_XyvzzHVGdNJBXrBq8W4gf2GK0bJe5tEtwgDBMJCkWyU-63JRlocSG9DoIxKGLK0F6FTv-jFXWivDigO7WjTprYkxeDElrsggpujG9h4GBCeAWAk5kv3RwQwhY22lo4wxcE4sJCKYIBETJq8-LflDsw_eABdtYGxz5'}
-		#HEADERS = {'User-Agent' : 'Opera/9.80 (X11; Linux i686; U; en) Presto/2.6.30 Version/10.63','Cookie' : 'GSP=ID=%s:CF=4' % google_id }
-	    elif agent == 1:
-		HEADERS = {'User-Agent' : 'Mozilla/4.0','Cookie' : 'GSP=ID=%s:CF=4' % google_id }
-	    elif agent == 2:
-		HEADERS = {'User-Agent' : 'Mozilla/5.0','Cookie' : 'GSP=ID=%s:CF=4' % google_id }
-	    elif agent == 3:
-		HEADERS = {'User-Agent' : 'Opera 11.50 Beta 1','Cookie' : 'GSP=ID=%s:CF=4' % google_id }
-	    elif agent == 4:
-		HEADERS = {'User-Agent' : 'mozilla/5.0 (windows; u; windows nt 5.1; en-us; rv:1.7.13) gecko/20060414','Cookie' : 'GSP=ID=%s:CF=4' % google_id }
-	    request = urllib2.Request(url, headers=HEADERS)
-	    logging.debug("url: %s" % url)
-	    logging.debug("headers: %s" % HEADERS)
-            response = urllib2.urlopen(request)
-            break
-        except urllib2.URLError, e:
-            sleep_secs = attempt ** 4
-            print >> sys.stderr, 'ERROR: %s.\nRetrying in %s seconds...' % (e, sleep_secs)            
-            time.sleep(sleep_secs)    
-                                                  
-                                                  
-    # response = urllib2.urlopen(request)
-    logging.debug("response: %s" % response)
-    html = response.read()
-    html = html.decode('ascii', 'ignore') 
-    # grab the bibtex links
-    tmp = get_biblinks(html)
-    pub_tmp = get_publinks(html)
-    cite_tmp = get_citations(html)
-    citelink_tmp = get_citation_links(html)
-    #logging.debug("publinks: %s" % pub_tmp)
-    #logging.debug("citations: %s" % cite_tmp)
-    
-    logging.debug("\n\nWe have read %s links in our list." % len(pub_tmp))
-    # follow the bibtex links to get the bibtex entries
+    # initialized result list
     result = list()
-    if allresults == False and len(tmp) != 0:
-        tmp = [tmp[0]]
-    i = 0
-    for link in tmp:
-	# sleep a second to prevent google from thinking we're a robot...
-	# one second is not always enough, still get caught as a robot
-	# four seconds gives occasional trouble
-	# five seconds seems to work for one query, but then it fails
-	# for the random numbers, a multipier of 10 does not work
-	# 20 lets google find us, too
-	# 10 plus up to 30 seconds wait time works...
-	sleep_time = 10+random.random()*30
-	logging.debug("\n\nWaiting a %s seconds to stay friends with The Mighty Google..." % sleep_time)
-	time.sleep(sleep_time)  
-        url = GOOGLE_SCHOLAR_URL+link
-	logging.debug("Sending request: %s" % url)
-        request = urllib2.Request(url, headers=HEADERS)
-        response = urllib2.urlopen(request)
-        bib = response.read()
-	bib = bib.decode('ascii', 'ignore') 
-	logging.debug("Entry number: %s of %s " %  (i,len(pub_tmp)-1))
-	logging.debug("Received entry:\n %s" %  bib)
-	logging.debug("Corresponding link: %s" % pub_tmp[i])
-	# insert pub links
-	if bib.rfind("}")>0 :
-	  if i<len(pub_tmp):
-	    # add a few fields for our purpose
-	    if written_by != "False" :
-	      bib=bib[0:bib.rfind("}")-1]+",\n  citations={"+'{:04d}'.format(cite_tmp[i])+"},\n  citelinks={"+GOOGLE_SCHOLAR_URL+citelink_tmp[i]+"},\n  URL={"+pub_tmp[i]+"},\n  query={"+written_by+"},\n  falsehit={no},\n  instrument={"+instrument+"},\n  facility={"+facility+"}\n}"
-	    else:
-	      bib=bib[0:bib.rfind("}")-1]+",\n  citations={"+'{:04d}'.format(cite_tmp[i])+"},\n  citelinks={"+GOOGLE_SCHOLAR_URL+citelink_tmp[i]+"},\n  URL={"+pub_tmp[i]+"},\n  query={"+shortstr_short+"},\n  falsehit={no},\n  instrument={"+instrument+"},\n  facility={"+facility+"}\n}"
-	  else:
-	    print "PROBLEM: I ran out of links before the list of references was over!!!!!!!!!!!!"
-        result.append(bib)
-        i=i+1
-    return result
+    # google limits to 20 results, run a loop until there is no more results
+    query_number = 0
+    while (True):
+	# Try to connect a few times, waiting longer after each consecutive failure
+	MAX_ATTEMPTS = 10
+	for attempt in range(MAX_ATTEMPTS):
+	    try:
+		# fake google id (looks like it is a 16 elements hex)
+		google_id = hashlib.md5(str(random.random())).hexdigest()[:16] 
+	      
+		# try to confuse google with random user agents, e.g. from http://www.stevestechresource.com/str/instructional/web_browser_useragent_values.html
+		# confusing doesn't seem to work. What seems to work is to use wireshark and get the full cookie sent by google, the one in the cookie manager is insufficient...
+		# looks like one needs to enter the cookies from scholar.google.com and google.com as listed in Opera cookie manager after one has identified the little picture
+		agent = random.randrange(1) 
+		if agent == 0:
+		    HEADERS = {'User-Agent' : 'Opera/9.80 (X11; Linux i686; U; en) Presto/2.10.289 Version/12.02','Cookie' : 'BIGipServerbluecoat_pool=2248478892.36895.0000; GSP=ID=d7531c222b61af10:IN=7e6cc990821af63+3047c38f1bda9f39:CF=4:DT=1:NT=1365626870:S=7UNqsXBJ5j_TlQWj; MPRF=H4sIAAAAAAAAAKt4175i3Q3VLiaGSUwKhmam5kmGBuZppsnmicYG5iZmxsnGxuaplmlGqQYWBkkTmBkAbNVZqjAAAAA; SS=DQAAAL4AAAD-XDruwu4pI0AwKA6kNxTwqaePBrComcsrEv2YwGfq3RZqbpswnDyBIus7jchEcKVsvHyZWkNPhA_ukTHsGHscEF4-jxsj153OhcwnJ_Do_4FRQKuou7ih6z2a9uPcbUoo7PE-vRVt-XKBPQezIbkIZSunCxBmcKBifR8fbAxknWbe9cTwB05wGJpb1dwb8_en-GyDrMOJDdR-shZDelymhhsmxIamClOmv7GRgWx1MU3ZxYcsjGnGoODDXCItK3g; PREF=ID=d7531c222b61af10:U=53b32425fdf95ceb:FF=0:LD=en:NR=100:TM=1206481493:LM=1355271328:FV=2:GM=1:IG=3:S=O7mIFn_kInevikqr; HSID=Ax9aZIxyX_vMmzWI2; APISID=WZar1cZiLRo74Q69/A0lQVUQ2WxaTgXSLU; NID=67=v-J_Owu2yFYVTxMhZdoDRdhHIJnnh949vJqtt1358nyZ9uBkvodlw1jEST9EX7d33cqmLpmbFjn9-ZBwz6ImFi03cjYmikme6Ie1jZ0WFt4fdp6dtRnVxuNUwrYkwQ3aKA4KHPQRrG415sQUzEXternbEqr_pEXvo04NYdA7KTq6MAnohbP6IEyDl8I-NM1UR8lP_lOIu4rE8wipgJLWI9mJqQ; GDSESS=ID=edb0efb4a5e03c7e:TM=1365703122:C=c:IP=192.12.184.7-:S=APGng0vxQhgISVGM9xHsgzFF_aomNF6a1w; SID=DQAAAMsAAABwR3XBxthKKuQRKbbOrszFVjdpAKRkMTrTvlCQjZ-5oPfN_L_6JGsK36FmiHkyTomNVrnHw7QAi_OfLHayW_N7Xw1rGblqDoOYBaI7_2Nhx5znbDYyDLzi_bnK-WrBHM9gD3Cb-qociOq-ROEwHmgHpG0_exo-ddMNJPpJv6-KpxzOUXokLHEAxfw805VvHGqtDbKMUNaIc1lozQy1ayTKPFtvApbCQMCandTQFW2VTIMAYY-guaQkfvaFxtpe0jAjbAUbzwalC-iBVg9RI1BH'}
+		    #HEADERS = {'User-Agent' : 'Opera/9.80 (X11; Linux i686; U; en) Presto/2.6.30 Version/10.63','Cookie' : 'GSP=ID=%s:CF=4' % google_id }
+		elif agent == 1:
+		    HEADERS = {'User-Agent' : 'Mozilla/4.0','Cookie' : 'GSP=ID=%s:CF=4' % google_id }
+		elif agent == 2:
+		    HEADERS = {'User-Agent' : 'Mozilla/5.0','Cookie' : 'GSP=ID=%s:CF=4' % google_id }
+		elif agent == 3:
+		    HEADERS = {'User-Agent' : 'Opera 11.50 Beta 1','Cookie' : 'GSP=ID=%s:CF=4' % google_id }
+		elif agent == 4:
+		    HEADERS = {'User-Agent' : 'mozilla/5.0 (windows; u; windows nt 5.1; en-us; rv:1.7.13) gecko/20060414','Cookie' : 'GSP=ID=%s:CF=4' % google_id }
+		request = urllib2.Request(url, headers=HEADERS)
+		logging.debug("url: %s" % url)
+		logging.debug("headers: %s" % HEADERS)
+		response = urllib2.urlopen(request)
+		break
+	    except urllib2.URLError, e:
+		sleep_secs = attempt ** 4
+		print >> sys.stderr, 'ERROR: %s.\nRetrying in %s seconds...' % (e, sleep_secs)            
+		time.sleep(sleep_secs)    
+						      
+						      
+	# response = urllib2.urlopen(request)
+	logging.debug("response: %s" % response)
+	html = response.read()
+	html = html.decode('ascii', 'ignore') 
+	# grab the bibtex links
+	tmp = get_biblinks(html)
+	pub_tmp = get_publinks(html)
+	cite_tmp = get_citations(html)
+	citelink_tmp = get_citation_links(html)
+	#logging.debug("publinks: %s" % pub_tmp)
+	#logging.debug("citations: %s" % cite_tmp)
+	
+	hits_number = len(pub_tmp)
+	logging.debug("\n\nWe have read %s links in our list." % hits_number)
+	# are we done yet?
+	if (hits_number==0):
+	    logging.debug("Number of hits is 0, we must have had exactly 20 before, returning.")
+	    return result
+	    
+	# we have more than 0 links to work with
+	# follow the bibtex links to get the bibtex entries
+	if allresults == False and len(tmp) != 0:
+	    tmp = [tmp[0]]
+	i = 0
+	for link in tmp:
+	    # sleep a second to prevent google from thinking we're a robot...
+	    # one second is not always enough, still get caught as a robot
+	    # four seconds gives occasional trouble
+	    # five seconds seems to work for one query, but then it fails
+	    # for the random numbers, a multipier of 10 does not work
+	    # 20 lets google find us, too
+	    # 10 plus up to 30 seconds wait time works...
+	    sleep_time = 10+random.random()*20
+	    logging.debug("\n\nWaiting a %s seconds to stay friends with The Mighty Google..." % sleep_time)
+	    time.sleep(sleep_time)  
+	    url = GOOGLE_SCHOLAR_URL+link
+	    logging.debug("Sending request: %s" % url)
+	    request = urllib2.Request(url, headers=HEADERS)
+	    response = urllib2.urlopen(request)
+	    bib = response.read()
+	    bib = bib.decode('ascii', 'ignore') 
+	    logging.debug("Entry number: %s of %s " %  (i,len(pub_tmp)-1))
+	    logging.debug("Received entry:\n %s" %  bib)
+	    logging.debug("Corresponding link: %s" % pub_tmp[i])
+	    # insert pub links
+	    if bib.rfind("}")>0 :
+	      if i<len(pub_tmp):
+		# add a few fields for our purpose
+		if written_by != "False" :
+		  bib=bib[0:bib.rfind("}")-1]+",\n  citations={"+'{:04d}'.format(cite_tmp[i])+"},\n  citelinks={"+GOOGLE_SCHOLAR_URL+citelink_tmp[i]+"},\n  URL={"+pub_tmp[i]+"},\n  query={"+written_by+"},\n  falsehit={no},\n  instrument={"+instrument+"},\n  facility={"+facility+"}\n}"
+		else:
+		  bib=bib[0:bib.rfind("}")-1]+",\n  citations={"+'{:04d}'.format(cite_tmp[i])+"},\n  citelinks={"+GOOGLE_SCHOLAR_URL+citelink_tmp[i]+"},\n  URL={"+pub_tmp[i]+"},\n  query={"+shortstr_short+"},\n  falsehit={no},\n  instrument={"+instrument+"},\n  facility={"+facility+"}\n}"
+	      else:
+		print "PROBLEM: I ran out of links before the list of references was over!!!!!!!!!!!!"
+	    result.append(bib)
+	    logging.debug("Added entry yo result list, we now have %s entries in our list." % len(result))
+	    i=i+1
+	# did we have 20 hits and there is a next page with results?
+	if (hits_number==20):
+	    # do not return, get the next 20 results
+	    query_number = query_number+1
+	    logging.debug("\n\n\n\n\nGoing to the next query number : %s" % query_number)
+	    url = GOOGLE_SCHOLAR_URL + searchstr + "&start="+str(query_number*20)
+	    logging.debug("new query for google: %s" % url)
+	else:
+	    # return result, we're done
+	    return result
+	
 
 
 def get_biblinks(html):
