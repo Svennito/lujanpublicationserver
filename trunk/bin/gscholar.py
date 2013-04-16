@@ -219,7 +219,7 @@ def query(searchstr, year_from=False, year_to=False, exact_phrase=False, allresu
 	    logging.debug("Added entry yo result list, we now have %s entries in our list." % len(result))
 	    i=i+1
 	# did we have 20 hits and there is a next page with results?
-	if (hits_number==20):
+	if (hits_number>19):
 	    # do not return, get the next 20 results
 	    query_number = query_number+1
 	    logging.debug("\n\n\n\n\nGoing to the next query number : %s" % query_number)
