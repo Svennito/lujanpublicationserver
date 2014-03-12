@@ -65,12 +65,13 @@ HEADERS = {'User-Agent' : 'Opera/9.80 (X11; Linux i686; U; en) Presto/2.6.30 Ver
 # valid scholar search string (generated using advanced search):
 # http://scholar.google.com/scholar?as_q=hippo+neutron&num=100&btnG=Search+Scholar&as_epq=&as_oq=&as_eq=&as_occt=any&as_sauthors=&as_publication=&as_ylo=&as_yhi=&as_sdt=1.&as_sdtp=on&as_sdts=32&hl=en
 # http://scholar.google.com/scholar?hl=en&num=100&q=hippo+neutron&as_allsubj=some&as_subj=bio&as_subj=chm&as_subj=eng&as_subj=phy&as_sdt=10000000001&as_ylo=2010&as_yhi=2010&as_vis=1
-def query(searchstr, year_from=False, year_to=False, exact_phrase=False, allresults=True,written_by=False,instrument=False,facility=False):
+def query(searchstr, year_from=False, year_to=False, exact_phrase=False, allresults=True,written_by=False,instrument=False,facility=False,doi=False):
     """Return a list of bibtex items."""
     logging.debug("Query: %s" % searchstr)
     logging.debug("From year: %s" % year_from)
     logging.debug("To year: %s" % year_to)
     logging.debug("Exact phrase: %s" % exact_phrase)
+    logging.debug("DOI: %s" % doi)
     logging.debug("Written by: %s" % written_by)
     logging.debug("Instrument: %s" % instrument)
     logging.debug("Facility: %s" % facility)
@@ -100,7 +101,8 @@ def query(searchstr, year_from=False, year_to=False, exact_phrase=False, allresu
     searchstr = searchstr+"&as_epq="
     
     # require at least one of these terms: lanl "los alamos" lansce
-    searchstr = searchstr+"&as_oq=lanl+%22los+alamos%22+lansce&as_eq=&as_occt=any"
+    if doi == "False":
+      searchstr = searchstr+"&as_oq=lanl+%22los+alamos%22+lansce&as_eq=&as_occt=any"
     
     if written_by != "False" :
       searchstr = searchstr+"&as_sauthors=%22"+written_by+"%22" #       as_sauthors=%22S*+Vogel%22
@@ -216,7 +218,7 @@ def query(searchstr, year_from=False, year_to=False, exact_phrase=False, allresu
 	      else:
 		print "PROBLEM: I ran out of links before the list of references was over!!!!!!!!!!!!"
 	    result.append(bib)
-	    logging.debug("Added entry yo result list, we now have %s entries in our list." % len(result))
+	    logging.debug("Added entry to result list, we now have %s entries in our list." % len(result))
 	    i=i+1
 	# did we have 20 hits and there is a next page with results?
 	if (hits_number>19):
@@ -391,6 +393,8 @@ if __name__ == "__main__":
                       default="False", help="generate facility entry in bibtex output with value FACILITY", metavar="FACILITY")
     parser.add_option("-d", "--debug", action="store_true", dest="debug",
                       default="False", help="show debugging output")
+    parser.add_option("-D", "--DOI", action="store_true", dest="doi",
+                      default="False", help="find a DOI, do not require LANL or LANSCE or Los Alamos")
     parser.add_option("-e", "--exact", dest="exact_phrase",
                       default="False", help="require exact phrase (e.g. SMARTS, but not smart")
     parser.add_option("-f", "--year_from",  dest="query_year_from",
@@ -431,7 +435,7 @@ if __name__ == "__main__":
         if options.written_by != "False":
 	  # if so - did we get a name
 	  logging.debug("Querying publications written by: %s." % options.written_by)
-        biblist = query(args, options.query_year_from, options.query_year_to, options.exact_phrase, options.all,options.written_by,options.instrument,options.facility)
+        biblist = query(args, options.query_year_from, options.query_year_to, options.exact_phrase, options.all,options.written_by,options.instrument,options.facility,options.doi)
     if len(biblist) < 1:
         print "No results found, try again with a different query!"
         sys.exit(1)
@@ -453,6 +457,9 @@ if __name__ == "__main__":
 	    for i in vol, number, pages:
 		if i: 
 		    searchstring = searchstring + "_" + i
+	    # replace "/" to not mess-up the links in the database
+	    searchstring.replace("/","_")
+	    
 	    logging.debug("Searchstring: %s" % searchstring)
 	    # assemble a new entry with the new first line
 	    item = searchstring + ",\n"+item[item.find("\n")+1:]

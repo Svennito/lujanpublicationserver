@@ -24,7 +24,9 @@
 		    setCookie("LPS_filter_facility",document.filter.FilterFacility.value,365)
 		    setCookie("LPS_filter_name",document.filter.FilterName.value,365)
 		    setCookie("LPS_filter_year",document.filter.FilterYear.value,365)
+		    setCookie("LPS_filter_year_to",document.filter.FilterYearTo.value,365)
 		    setCookie("LPS_filter_instr",document.filter.FilterInst.value,365)
+		    setCookie("LPS_filter_type",document.filter.FilterType.value,365)
 		  }
 		  // save filter values also to flash memory
 // 		  document.flash.FilterFacility 	= document.filter.FilterFacility.value
@@ -48,7 +50,7 @@
 <!-- SV120708 Make nicer header...
 			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
 -->
-			<h1>Publication List - Click author to edit, click title to see paper, click headers to sort</h1>
+			<h1>Publication List (${bibtabInstanceList.getTotalCount()} items with current filter) <br> Click author to edit, click title to see paper, click column headers to sort</h1>
 <!--       http://kiwigrails.blogspot.com/2008/07/filtering-list.html -->
 			<div class="body">
 			    <g:form action="list" method="post" name="filter">
@@ -56,6 +58,27 @@
 				    <table>
 					<tbody>
 					    <tr class='prop'>
+						    <td valign='top' class='name'>
+							    <label for='FilterName'>Name:</label>
+						    </td>
+						    <td valign='top' class='value'>
+							    <input type="text" id="FilterName" size="8" name="FilterName" value="${flash.FilterName=g.cookie(name:"LPS_filter_name")}"/>
+		    
+						    </td>
+						    <td valign='top' class='name'>
+							    <label for='FilterYear'>Year:</label>
+						    </td>
+						    <td valign='top' class='value'>
+							    <input type="text" id="FilterYear" size="3" name="FilterYear" value="${flash.FilterYear=g.cookie(name:"LPS_filter_year")}"/>
+						    </td>
+						    <td valign='top' class='name'>
+							    <label for='FilterYearTo'>To:</label>
+						    </td>
+						    <td valign='top' class='value'>
+							    <input type="text" id="FilterYearTo" size="3" name="FilterYearTo" value="${flash.FilterYearTo=g.cookie(name:"LPS_filter_year_to")}"/>
+						    </td>
+					    </tr>
+					    <tr>
 						    <td valign='top' class='name'>
 							    <label for='FilterFacility'>Facility:</label>
 						    </td>
@@ -73,17 +96,19 @@
 </select>
 						    </td>
 						    <td valign='top' class='name'>
-							    <label for='FilterName'>Name:</label>
+							    <label for='Type'>Type:</label>
 						    </td>
 						    <td valign='top' class='value'>
-							    <input type="text" id="FilterName" size="8" name="FilterName" value="${flash.FilterName=g.cookie(name:"LPS_filter_name")}"/>
-		    
-						    </td>
-						    <td valign='top' class='name'>
-							    <label for='FilterYear'>Year:</label>
-						    </td>
-						    <td valign='top' class='value'>
-							    <input type="text" id="FilterYear" size="4" name="FilterYear" value="${flash.FilterYear=g.cookie(name:"LPS_filter_year")}"/>
+							  <select name="FilterType" id="FilterType" name="FilterType" value="${flash.FilterType}">
+							  <option value=""                  ${g.cookie(name:"LPS_filter_type") == '' ? 'selected="selected="' : ''}      		>any</option>
+							  <option value="article"     	    ${g.cookie(name:"LPS_filter_type") == 'article' ? 'selected="selected="' : ''}"    		>article</option>
+							  <option value="inproceedings"     ${g.cookie(name:"LPS_filter_type") == 'inproceedings' ? 'selected="selected="' : ''}"      	>inproceedings</option>
+							  <option value="phdthesis"	    ${g.cookie(name:"LPS_filter_type") == 'phdthesis' ? 'selected="selected="' : ''}"      	>phdthesis</option>
+							  <option value="book"     	    ${g.cookie(name:"LPS_filter_type") == 'book' ? 'selected="selected="' : ''}"      		>book</option>
+							  <option value="techreport"	    ${g.cookie(name:"LPS_filter_type") == 'techreport' ? 'selected="selected="' : ''}"      	>techreport</option>
+							  <option value="misc"     	    ${g.cookie(name:"LPS_filter_type") == 'misc' ? 'selected="selected="' : ''}"      		>misc</option>
+							  <option value="incollection"      ${g.cookie(name:"LPS_filter_type") == 'incollection' ? 'selected="selected="' : ''}"      	>incollection</option>
+							  </select>
 						    </td>
 						    <td valign='top' class='name'>
 							    <label for='FilterInst'>Instrument:</label>
@@ -153,9 +178,6 @@
 <!-- 						      <span class="button"><input class="save" type="submit" value="Filter" onClick="SaveFilter("${flash.FilterFacility}","${flash.FilterInst}","${flash.FilterName}","${flash.FilterYear}")"/></span> -->
 						      <span class="button"><input class="save" type="submit" value="Filter" onClick="saveFilter();${flash.offset=0}"/></span> 
 						    </td>
-						    <td>
-						      ${bibtabInstanceList.getTotalCount()} items
-						    </td>
 					    </tr>
 					</tbody>
 				    </table>
@@ -191,6 +213,12 @@
 					-->
 						<g:sortableColumn property="citations" action="sort_clicked" title="Cited"  defaultOrder="desc"/>
 					
+						<g:sortableColumn property="lc_staff" action="sort_clicked" title="LC"  defaultOrder="desc"/>
+					
+						<g:sortableColumn property="primarydata" action="sort_clicked" title="PD"  defaultOrder="desc"/>
+					
+						<g:sortableColumn property="refereed" action="sort_clicked" title="R"  defaultOrder="desc"/>
+					
 					</tr>
 				</thead>
 				<tbody>
@@ -213,6 +241,11 @@
 					
 						<td><a href="${fieldValue(bean: bibtabInstance, field: "citelinks")}" target="_blank" >${fieldValue(bean: bibtabInstance, field: "citations")}</a></td>
 
+						<td>${fieldValue(bean: bibtabInstance, field: "lc_staff")}</td>
+					
+						<td>${fieldValue(bean: bibtabInstance, field: "primarydata")}</td>
+
+						<td>${fieldValue(bean: bibtabInstance, field: "refereed")}</td>
 
 					</tr>
 				</g:each>
@@ -223,38 +256,10 @@
 				<g:paginate total="${bibtabInstanceList.getTotalCount()}"/>
 			</div>
 		</div>
-<!-- SV120713 Adding export options using jasper
-      http://grails.org/plugin/jasper/
-      jasper= argument is a report named report_name.jasper" (use IReport) in "bibtex/web-app/reports/".
--->
 		<div class="paginateButtons">
 		<h1>
-		Print reports (Enter instrument in capital letters, year with four digits, click PDF icon):
+		Export current selection: <export:formats formats="['csv', 'excel', 'ods', 'pdf', 'rtf', 'xml']" params="${flash}"/>
 		</h1>
-		<g:jasperReport
-		  jasper="PublicationList_Instr"
-		  format="PDF"
-		  name="By instrument">
-		  Instrument: <input type="text" name="Instrument"/>
-		</g:jasperReport>
-		<g:jasperReport
-		  jasper="PublicationList_Year"
-		  format="PDF"
-		  name="By year">
-		  Year: <input type="text" name="Year"/>
-		</g:jasperReport>
-		<g:jasperReport
-		  jasper="PublicationList_InstrAndYear"
-		  format="PDF"
-		  name="By instrument and year">
-		  Instrument: <input type="text" name="Instrument"/>
-		  Year: <input type="text" name="Year"/>
-		</g:jasperReport>
-		</div>
-		<h1>
-		Export current selection:
-		</h1>
-		    <export:formats formats="['csv', 'excel', 'ods', 'pdf', 'rtf', 'xml']" params="${flash}"/>
 		</div>
 	</body>
 </html>
