@@ -23,7 +23,9 @@ class BibtabController {
 	params.FilterFacility	= g.cookie(name:"LPS_filter_facility")
 	params.FilterName	= g.cookie(name:"LPS_filter_name")
 	params.FilterYear	= g.cookie(name:"LPS_filter_year")
+	params.FilterYearTo	= g.cookie(name:"LPS_filter_year_to")
 	params.FilterInst	= g.cookie(name:"LPS_filter_instr")
+	params.FilterType	= g.cookie(name:"LPS_filter_type")
 	// if we received an offset from flash (previous redirect), make it a parameter
 	if (flash.offset) { params.offset = flash.offset }
 
@@ -31,7 +33,9 @@ class BibtabController {
 	flash.FilterFacility	= params.FilterFacility
 	flash.FilterName	= params.FilterName
 	flash.FilterYear	= params.FilterYear
+	flash.FilterYearTo	= params.FilterYearTo
 	flash.FilterInst	= params.FilterInst
+	flash.FilterType	= params.FilterType
 	println "flash: <"+flash+">"
 	flash.offset		= params.offset
 	println "flash: <"+flash+">"
@@ -46,19 +50,41 @@ class BibtabController {
 	println "FilterFacility: <"+params.FilterFacility+"> + Cookie: <"+g.cookie(name:"LPS_filter_facility")+"> + flash: <"+flash.FilterFacility+">"
 	println "FilterName: <"+params.FilterName+"> + Cookie: <"+g.cookie(name:"LPS_filter_name")+"> + flash: <"+flash.FilterName+">"
 	println "FilterYear: <"+params.FilterYear+"> + Cookie: <"+g.cookie(name:"LPS_filter_year")+"> + flash: <"+flash.FilterYear+">"
+	println "FilterYearTo: <"+params.FilterYearTo+"> + Cookie: <"+g.cookie(name:"LPS_filter_year_to")+"> + flash: <"+flash.FilterYearTo+">"
 	println "FilterInst: <"+params.FilterInst+"> + Cookie: <"+g.cookie(name:"LPS_filter_instr")+"> + flash: <"+flash.FilterInst+">"
+	println "FilterType: <"+params.FilterType+"> + Cookie: <"+g.cookie(name:"LPS_filter_type")+"> + flash: <"+flash.FilterType+">"
 	
-	query = {
-	  and {
-	    like("facility", '%'+params.FilterFacility + '%')
-	    like("author", '%'+params.FilterName + '%')
-	    like("year", '%'+params.FilterYear + '%')
-	    like("instrument", '%'+params.FilterInst + '%')
-	    or {
-	      eq("falsehit", false)
-	      isNull("falsehit")
+	if (params.FilterYearTo>params.FilterYear) {
+	   // we have a valid year range
+	  println "Filtering for year range from "+params.FilterYear+" to "+params.FilterYearTo
+	  query = {
+	    and {
+	      like("facility", '%'+params.FilterFacility + '%')
+	      like("author", '%'+params.FilterName + '%')
+	      between("year", params.FilterYear, params.FilterYearTo)
+	      like("instrument", '%'+params.FilterInst + '%')
+	      like("bibtype", '%'+params.FilterType + '%')
+	      or {
+		eq("falsehit", false)
+		isNull("falsehit")
+	      }
 	    }
-	    
+	  }
+	} else {
+	   // we don't have a valid range, go only for one year
+	  println "Filtering for one year: "+params.FilterYear
+	  query = {
+	    and {
+	      like("facility", '%'+params.FilterFacility + '%')
+	      like("author", '%'+params.FilterName + '%')
+	      like("year", '%'+params.FilterYear + '%')
+	      like("instrument", '%'+params.FilterInst + '%')
+	      like("bibtype", '%'+params.FilterType + '%')
+	      or {
+		eq("falsehit", false)
+		isNull("falsehit")
+	      }
+	    }
 	  }
 	}
 	
@@ -78,10 +104,10 @@ class BibtabController {
 		// we're exporting
 		println "We're exporting..."
 		response.contentType = ConfigurationHolder.config.grails.mime.types[params.format]
-		response.setHeader("Content-disposition", "attachment; filename=${params.FilterFacility}_${params.FilterInst}_${params.FilterName}_${params.FilterYear}.${params.extension}")
+		response.setHeader("Content-disposition", "attachment; filename=${params.FilterFacility}_${params.FilterInst}_${params.FilterName}_${params.FilterYear}to${params.FilterYearTo}.${params.extension}")
 		
-		List fields = ["author", "title", "journal","year","bibtype","instrument","citations","primarydata","lc_staff","refereed"]
-		Map labels = ["author": "Author", "title": "Title", "journal":"Journal", "year":"Year", "bibtype":"Type", "instrument":"Instrument","citations":"Citations"]
+		List fields = ["author", "title", "journal","year","bibtype","instrument","citations","primarydata","lc_staff","refereed","high_impact","high_profile"]
+		Map labels = ["author": "Author", "title": "Title", "journal":"Journal", "year":"Year", "bibtype":"Type", "instrument":"Instrument","citations":"Citations","primarydata":"Primary Data"]
 		// Formatter closure
 		def replace_and = { domain, value ->
 			return value.replaceAll(" and ", ", ")
@@ -92,7 +118,7 @@ class BibtabController {
 		}
 
 		Map formatters = [author: replace_and, journal: assemble_cite]		
-		Map parameters = ["column.widths": [0.5, 0.9, 0.5, 0.25, 0.25, 0.25, 0.25,0.05,0.05,0.05]]
+		Map parameters = ["column.widths": [0.5, 0.9, 0.5, 0.25, 0.25, 0.25, 0.25,0.05,0.05,0.05,0.05,0.05]]
 		params.max = results.getTotalCount()
 		exportService.export(params.format, response.outputStream, results, fields, labels, formatters, parameters)
 	} 

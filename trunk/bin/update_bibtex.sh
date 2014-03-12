@@ -29,6 +29,5 @@ fi
 echo "SQL statements written to $1.sql."
 
 echo "Sending SQL statements to database..."
-#mysql -h sls.lansce.lanl.gov -ubibtex -pbibtex bibtex < $1.sql
-mysql -ubibtex -pbibtex bibtex < $1.sql
+mysql -h sls.lansce.lanl.gov -ubibtex -pbibtex bibtex < $1.sql
 
